@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# ---------------------------------------------------------------
+# a - Local Bash Aliases
+# ---------------------------------------------------------------
+usage() { 
+  if $LONG_USAGE; then
+    printf "a $VERSION - Local Bash Aliases\n\n"
+  fi
+  printf "Usage:\n"
+  printf "  a [COMMAND...]\n"
+  if $LONG_USAGE; then
+    printf "    soon...\n"
+  fi
+  printf "  alf -h|--help\n"
+  if $LONG_USAGE; then
+    printf "    Show this message\n\n"
+  fi
+  printf "  alf -v|--version\n"
+  if $LONG_USAGE; then
+    printf "    Show version number\n\n"
+  fi
+}
+
+find_config() {
+  CONFIG_FILE="op.conf"
+
+  if [[ ! -f $CONFIG_FILE ]]; then
+    printf "ERROR: Cannot find config file.\n\n"
+    echo "You should either run this command in a folder with 'a.conf' file"
+    exit 1
+  fi
+}
+
+find_command() {
+  regex="^$ALIAS:\s*(.+)$"
+  find_config
+
+  while IFS= read -r line; do
+    if [[ $line =~ $regex ]]; then
+      COMMAND="${BASH_REMATCH[1]}"
+      break
+    fi
+  done < $CONFIG_FILE
+}
+
+run() {
+  ALIAS=$1
+  shift
+  find_command
+  if [[ -n $COMMAND ]]; then
+    eval $COMMAND $@
+  else
+    echo "Command not found: $ALIAS"
+  fi
+}
+
+initialize() {
+  VERSION="0.0.1"
+  LONG_USAGE=false
+  set -e
+}
+
+initialize
+run $@

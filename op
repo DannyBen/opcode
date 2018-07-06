@@ -1,39 +1,45 @@
 #!/usr/bin/env bash
 # ---------------------------------------------------------------
-# a - Local Bash Aliases
+# opcode - local command shortcuts
 # ---------------------------------------------------------------
 usage() { 
   if $LONG_USAGE; then
-    printf "a $VERSION - Local Bash Aliases\n\n"
+    printf "opcode $VERSION - local command shortcuts\n\n"
   fi
   printf "Usage:\n"
-  printf "  a [COMMAND...]\n"
+  printf "  op CODE [ARGS]\n"
   if $LONG_USAGE; then
-    printf "    soon...\n"
+    printf "    Execute a command from $CONFIG_FILE\n"
+    printf "    Arguments will be passed to the command\n\n"
   fi
-  printf "  alf -h|--help\n"
+  printf "  op -s|--show\n"
+  if $LONG_USAGE; then
+    printf "    Show $CONFIG_FILE\n\n"
+  fi
+  printf "  op -e|--edit\n"
+  if $LONG_USAGE; then
+    printf "    Open $CONFIG_FILE for editing\n\n"
+  fi
+  printf "  op -h|--help\n"
   if $LONG_USAGE; then
     printf "    Show this message\n\n"
   fi
-  printf "  alf -v|--version\n"
+  printf "  op -v|--version\n"
   if $LONG_USAGE; then
     printf "    Show version number\n\n"
   fi
 }
 
-find_config() {
-  CONFIG_FILE="op.conf"
-
+need_config() {
   if [[ ! -f $CONFIG_FILE ]]; then
-    printf "ERROR: Cannot find config file.\n\n"
-    echo "You should either run this command in a folder with 'a.conf' file"
+    echo "Cannot find $CONFIG_FILE"
     exit 1
   fi
 }
 
 find_command() {
-  regex="^$ALIAS:\s*(.+)$"
-  find_config
+  need_config
+  regex="^$CODE:\s*(.+)$"
 
   while IFS= read -r line; do
     if [[ $line =~ $regex ]]; then
@@ -43,22 +49,43 @@ find_command() {
   done < $CONFIG_FILE
 }
 
-run() {
-  ALIAS=$1
-  shift
+run_command() {
   find_command
   if [[ -n $COMMAND ]]; then
-    eval $COMMAND $@
+    eval $COMMAND "$@"
   else
-    echo "Command not found: $ALIAS"
+    echo "Code not found: $CODE"
+    exit 1
   fi
+}
+
+edit() {
+  need_config
+  ${EDITOR:-vi} $CONFIG_FILE
+}
+
+show() {
+  need_config
+  cat $CONFIG_FILE
+}
+
+run() {
+  case "$1" in
+    "" ) usage ;;
+    -s | --show    ) show ;;
+    -e | --edit    ) edit ;;
+    -h | --help    ) LONG_USAGE=true; usage ;;
+    -v | --version ) echo $VERSION ;;
+    * ) CODE=$1; shift; run_command "$@" ;;
+  esac
 }
 
 initialize() {
   VERSION="0.0.1"
   LONG_USAGE=false
+  CONFIG_FILE="op.conf"
   set -e
 }
 
 initialize
-run $@
+run "$@"

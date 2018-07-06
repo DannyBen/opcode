@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+echo "This operation will download the opcode bash script to /usr/local/bin/op."
+echo "Continue? [yN]"
+read answer
+
+if [[ $answer =~ [Yy] ]]; then
+  echo "Downloading from github.com/DannyBen/opcode..."
+  sudo bash -c "curl -s https://raw.githubusercontent.com/DannyBen/opcode/master/op > /usr/local/bin/op"
+  sudo chmod a+x /usr/local/bin/op
+  if type op > /dev/null; then
+    echo "Done. Type 'op --help' for more info."
+  else
+    echo "Failed downloading."
+    exit 1
+  fi
+else
+  echo "Aborting"
+fi

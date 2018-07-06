@@ -4,7 +4,7 @@ Opcode - Local Command Shortcuts
 Opcode lets you define a simple configuration file in any directory.
 This file includes shortcuts to other commands.
 
-For a similar project, but for globally accessible aliases, see [alf][alf]
+For a similar project, but for globally accessible aliases, see [alf][alf].
 
 Install
 --------------------------------------------------

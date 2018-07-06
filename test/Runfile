@@ -1,6 +1,6 @@
 require "runfile-tasks"
 
-title   "Alf Feature Tests"
+title   "Opcode Feature Tests"
 
 RunfileTasks::Testing.cucumber
 

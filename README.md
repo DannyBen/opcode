@@ -4,6 +4,8 @@ Opcode - Local Command Shortcuts
 Opcode lets you define a simple configuration file in any directory.
 This file includes shortcuts to other commands.
 
+For a similar project, but for globally accessible aliases, see [alf][alf]
+
 Install
 --------------------------------------------------
 
@@ -59,3 +61,6 @@ and it will be translated to this command
 The `#` at the end is necessary so that bash ignores the entire arguments 
 array, which is always appended at the end.
 
+
+
+[alf]: https://github.com/dannyben/alf

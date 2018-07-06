@@ -1,6 +1,10 @@
 Opcode - Local Command Shortcuts
 ==================================================
 
+[![Build Status](https://travis-ci.com/DannyBen/opcode.svg?branch=master)](https://travis-ci.com/DannyBen/opcode)
+
+---
+
 Opcode lets you define a simple configuration file in any directory.
 This file includes shortcuts to other commands.
 

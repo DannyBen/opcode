@@ -5,8 +5,19 @@ read answer
 
 if [[ $answer =~ [Yy] ]]; then
   echo "Downloading from github.com/DannyBen/opcode..."
-  sudo bash -c "curl -s https://raw.githubusercontent.com/DannyBen/opcode/master/op > /usr/local/bin/op"
-  sudo chmod a+x /usr/local/bin/op
+
+  CURL_COMMAND="curl -s https://raw.githubusercontent.com/DannyBen/opcode/master/op > /usr/local/bin/op"
+
+  if [[ $EUID -ne 0 ]]; then
+    # not root, need sudo
+    sudo bash -c "$CURL_COMMAND"
+    sudo chmod a+x /usr/local/bin/op
+  else
+    # root
+    bash -c "$CURL_COMMAND"
+    chmod a+x /usr/local/bin/op
+  fi
+
   if type op > /dev/null; then
     echo "Done. Type 'op --help' for more info."
   else

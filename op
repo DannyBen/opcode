@@ -12,19 +12,23 @@ usage() {
     printf "    Execute a command from $CONFIG_FILE\n"
     printf "    Arguments will be passed to the command\n\n"
   fi
-  printf "  op -s|--show\n"
+  printf "  op -l | --list\n"
+  if $LONG_USAGE; then
+    printf "    List command codes\n\n"
+  fi
+  printf "  op -s | --show\n"
   if $LONG_USAGE; then
     printf "    Show $CONFIG_FILE\n\n"
   fi
-  printf "  op -e|--edit\n"
+  printf "  op -e | --edit\n"
   if $LONG_USAGE; then
     printf "    Open $CONFIG_FILE for editing\n\n"
   fi
-  printf "  op -h|--help\n"
+  printf "  op -h | --help\n"
   if $LONG_USAGE; then
     printf "    Show this message\n\n"
   fi
-  printf "  op -v|--version\n"
+  printf "  op -v | --version\n"
   if $LONG_USAGE; then
     printf "    Show version number\n\n"
   fi
@@ -59,11 +63,23 @@ run_command() {
   fi
 }
 
-edit() {
+list_codes() {
+  need_config
+  regex="^([^#][^:]*)"
+
+  while IFS= read -r line; do
+    if [[ $line =~ $regex ]]; then
+      printf "${BASH_REMATCH[1]}   "
+    fi
+  done < $CONFIG_FILE
+}
+
+
+edit_config() {
   ${EDITOR:-vi} $CONFIG_FILE
 }
 
-show() {
+show_config() {
   need_config
   cat $CONFIG_FILE
 }
@@ -71,8 +87,9 @@ show() {
 run() {
   case "$1" in
     "" ) usage ;;
-    -s | --show    ) show ;;
-    -e | --edit    ) edit ;;
+    -l | --list    ) list_codes ;;
+    -s | --show    ) show_config ;;
+    -e | --edit    ) edit_config ;;
     -h | --help    ) LONG_USAGE=true; usage ;;
     -v | --version ) echo $VERSION ;;
     * ) CODE=$1; shift; run_command "$@" ;;
@@ -80,7 +97,7 @@ run() {
 }
 
 initialize() {
-  VERSION="0.1.0"
+  VERSION="0.1.1"
   LONG_USAGE=false
   CONFIG_FILE="op.conf"
   set -e

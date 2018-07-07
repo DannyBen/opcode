@@ -9,6 +9,3 @@ before_script:
   - bundle
 
 script: bundle exec cucumber
-
-notifications:
-  email: false

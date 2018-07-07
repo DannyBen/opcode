@@ -60,7 +60,6 @@ run_command() {
 }
 
 edit() {
-  need_config
   ${EDITOR:-vi} $CONFIG_FILE
 }
 
@@ -81,7 +80,7 @@ run() {
 }
 
 initialize() {
-  VERSION="0.0.1"
+  VERSION="0.1.0"
   LONG_USAGE=false
   CONFIG_FILE="op.conf"
   set -e

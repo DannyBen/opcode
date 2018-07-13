@@ -94,16 +94,9 @@ install_completion() {
 }
 
 send_completion() {
-  if [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]]; then
-    return
-  fi
-
+  [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]] && return
   set $COMP_LINE
-
-  if [ "$#" -gt "2" ]; then
-    return
-  fi
-
+  [[ "$#" -gt "2" ]] && return
   compgen -W "$(op --list)" "$2"
 }
 

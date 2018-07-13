@@ -32,6 +32,11 @@ usage() {
   if $LONG_USAGE; then
     printf "    Show version number\n\n"
   fi
+  printf "  op --complete\n"
+  if $LONG_USAGE; then
+    printf "    Install bash completion\n"
+    printf "    Use with eval: eval \$(op --complete)\n\n"
+  fi
 }
 
 need_config() {
@@ -84,6 +89,24 @@ show_config() {
   cat $CONFIG_FILE
 }
 
+install_completion() {
+  echo "complete -C 'op --completion' op"
+}
+
+send_completion() {
+  if [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]]; then
+    return
+  fi
+
+  set $COMP_LINE
+
+  if [ "$#" -gt "2" ]; then
+    return
+  fi
+
+  compgen -W "$(op --list)" "$2"
+}
+
 run() {
   case "$1" in
     "" ) usage ;;
@@ -92,6 +115,8 @@ run() {
     -e | --edit    ) edit_config ;;
     -h | --help    ) LONG_USAGE=true; usage ;;
     -v | --version ) echo $VERSION ;;
+    --complete ) install_completion ;;
+    --completion ) send_completion ;;
     * ) CODE=$1; shift; run_command "$@" ;;
   esac
 }

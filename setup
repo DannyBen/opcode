@@ -9,15 +9,15 @@ if [[ $answer =~ [Yy] ]]; then
 
   CURL_COMMAND="curl -s https://raw.githubusercontent.com/DannyBen/opcode/master/op > /usr/local/bin/op"
 
-  # if [[ $EUID -ne 0 ]]; then
-  #   # not root, need sudo
-  #   sudo bash -c "$CURL_COMMAND"
-  #   sudo chmod a+x /usr/local/bin/op
-  # else
-  #   # root
-  #   bash -c "$CURL_COMMAND"
-  #   chmod a+x /usr/local/bin/op
-  # fi
+  if [[ $EUID -ne 0 ]]; then
+    # not root, need sudo
+    sudo bash -c "$CURL_COMMAND"
+    sudo chmod a+x /usr/local/bin/op
+  else
+    # root
+    bash -c "$CURL_COMMAND"
+    chmod a+x /usr/local/bin/op
+  fi
 
   if type op > /dev/null; then
     if ! grep -m 1 "op --complete" "$HOME/.bashrc" > /dev/null; then

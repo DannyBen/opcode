@@ -94,13 +94,13 @@ install_completion() {
 }
 
 send_completion() {
-  if [[ -z "$COMP_LINE" ]]; then
+  if [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]]; then
     return
   fi
 
   set $COMP_LINE
 
-  if [ "$#" != "2" ]; then
+  if [ "$#" -gt "2" ]; then
     return
   fi
 

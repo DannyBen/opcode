@@ -67,5 +67,19 @@ The `#` at the end is necessary so that bash ignores the entire arguments
 array, which is always appended at the end.
 
 
+Bash Completion
+--------------------------------------------------
+
+Opcode comes with bash completion. If you install opcode using the setup 
+script, bash completion installation will be offered to you.
+
+If you install opcode manually, and would like to enable bash completion, 
+simply add this to your `~/.bashrc`:
+
+    eval $(op --complete)
+
+
+
+
 
 [alf]: https://github.com/dannyben/alf

@@ -1,6 +1,6 @@
-Feature: Help
+Feature: Usage and Help
 
-Scenario: Run op
+Scenario: Run op in a folder without op.conf
    When I run "op"
    Then the output should say "Usage:"
     And the output should not say "Show this message"

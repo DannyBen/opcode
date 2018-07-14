@@ -89,6 +89,14 @@ show_config() {
   cat $CONFIG_FILE
 }
 
+list_or_usage() {
+  if [[ -f $CONFIG_FILE ]]; then
+    list_codes
+  else
+    usage
+  fi
+}
+
 install_completion() {
   echo "complete -C 'op --completion' op"
 }
@@ -102,7 +110,7 @@ send_completion() {
 
 run() {
   case "$1" in
-    "" ) usage ;;
+    "" ) list_or_usage ;;
     -l | --list    ) list_codes ;;
     -s | --show    ) show_config ;;
     -e | --edit    ) edit_config ;;
@@ -115,7 +123,7 @@ run() {
 }
 
 initialize() {
-  VERSION="0.2.0"
+  VERSION="0.2.1"
   LONG_USAGE=false
   CONFIG_FILE="op.conf"
   set -e

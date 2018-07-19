@@ -9,7 +9,7 @@ usage() {
   printf "Usage:\n"
   printf "  op CODE [ARGS]\n"
   if $LONG_USAGE; then
-    printf "    Execute a command from $CONFIG_FILE\n"
+    printf "    Execute a command from the config file ($CONFIG_FILE)\n"
     printf "    Arguments will be passed to the command\n\n"
   fi
   printf "  op -l | --list\n"
@@ -18,11 +18,15 @@ usage() {
   fi
   printf "  op -s | --show\n"
   if $LONG_USAGE; then
-    printf "    Show $CONFIG_FILE\n\n"
+    printf "    Show the config file ($CONFIG_FILE)\n\n"
   fi
   printf "  op -e | --edit\n"
   if $LONG_USAGE; then
-    printf "    Open $CONFIG_FILE for editing\n\n"
+    printf "    Open the config file for editing\n\n"
+  fi
+  printf "  op -a | --add CODE COMMAND...\n"
+  if $LONG_USAGE; then
+    printf "    Append a command to the config file\n\n"
   fi
   printf "  op -h | --help\n"
   if $LONG_USAGE; then
@@ -41,7 +45,7 @@ usage() {
 
 need_config() {
   if [[ ! -f $CONFIG_FILE ]]; then
-    echo "Cannot find $CONFIG_FILE"
+    echo "Cannot find config file ($CONFIG_FILE)"
     exit 1
   fi
 }
@@ -68,6 +72,13 @@ run_command() {
   fi
 }
 
+add_command() {
+  new_code=$1
+  shift
+  new_command=$@
+  echo "$new_code: $new_command" >> $CONFIG_FILE
+}
+
 list_codes() {
   need_config
   regex="^([^#][^:]*)"
@@ -79,7 +90,6 @@ list_codes() {
   done < $CONFIG_FILE
 }
 
-
 edit_config() {
   ${EDITOR:-vi} $CONFIG_FILE
 }
@@ -87,6 +97,14 @@ edit_config() {
 show_config() {
   need_config
   cat $CONFIG_FILE
+}
+
+set_config_file() {
+  if [[ -f "opcode" ]]; then
+    CONFIG_FILE="opcode"
+  else
+    CONFIG_FILE="op.conf"
+  fi
 }
 
 list_or_usage() {
@@ -114,6 +132,7 @@ run() {
     -l | --list    ) list_codes ;;
     -s | --show    ) show_config ;;
     -e | --edit    ) edit_config ;;
+    -a | --add     ) shift; add_command "$@" ;;
     -h | --help    ) LONG_USAGE=true; usage ;;
     -v | --version ) echo $VERSION ;;
     --complete ) install_completion ;;
@@ -123,9 +142,9 @@ run() {
 }
 
 initialize() {
-  VERSION="0.2.1"
+  VERSION="0.2.2"
   LONG_USAGE=false
-  CONFIG_FILE="op.conf"
+  set_config_file
   set -e
 }
 

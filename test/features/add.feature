@@ -5,7 +5,8 @@ Scenario: Run op --add
     And the file "op.conf" does not exist
    When I run "op --add say echo say --say -s"
     And I run "op --add shout echo shout"
-   Then the file "op.conf" should exist
+   Then the output should say "shout: echo shout"
+    And the file "op.conf" should exist
     And the file "op.conf" should include "say: echo say --say -s"
     And the file "op.conf" should include "shout: echo shout"
 

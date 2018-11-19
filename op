@@ -52,10 +52,16 @@ need_config() {
 
 find_command() {
   need_config
-  regex="^$CODE:\s*(.+)$"
+  exact="^$CODE:\s*(.+)$"
+  fuzzy="^$CODE[^\:]*:\s*(.+)$"
 
   while IFS= read -r line || [ -n "$line" ]; do
-    if [[ $line =~ $regex ]]; then
+    if [[ $line =~ $exact ]]; then
+      COMMAND="${BASH_REMATCH[1]}"
+      break
+    fi
+
+    if [[ $line =~ $fuzzy ]]; then
       COMMAND="${BASH_REMATCH[1]}"
       break
     fi
@@ -65,7 +71,11 @@ find_command() {
 run_command() {
   find_command
   if [[ -n $COMMAND ]]; then
-    eval $COMMAND "$@"
+    if [[ $COMMAND =~ \$ ]]; then
+      eval $COMMAND
+    else
+      eval $COMMAND "$@"
+    fi
   else
     echo "Code not found: $CODE"
     exit 1
@@ -143,7 +153,7 @@ run() {
 }
 
 initialize() {
-  VERSION="0.2.2"
+  VERSION="0.3.0"
   LONG_USAGE=false
   set_config_file
   set -e

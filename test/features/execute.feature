@@ -33,3 +33,15 @@ Scenario: Run a command with positional quoted arguments
    When I run "op reverse 'Lloyd Christmas' 'Harry Dunne'"
    Then the output should say "Harry Dunne and Lloyd Christmas"
 
+Scenario: Run a command with excess positional arguments
+  Given I am in the "fixtures/advanced" folder
+   When I run "op reverse Larry Curly Moe"
+   Then the output should say "Curly and Larry"
+
+Scenario: Run a command with partial command matching
+  Given I am in the "fixtures/completion" folder
+   When I run "op b"
+   Then the output should say "some build command"
+   When I run "op ba"
+   Then the output should say "another command that starts with b"
+

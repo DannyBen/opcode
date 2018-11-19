@@ -1,7 +1,7 @@
 Opcode - Local Command Shortcuts
 ==================================================
 
-![Version](https://img.shields.io/badge/version-0.2.2-blue.svg)
+![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)
 [![Build Status](https://travis-ci.com/DannyBen/opcode.svg?branch=master)](https://travis-ci.com/DannyBen/opcode)
 
 ---
@@ -27,7 +27,7 @@ Usage
 --------------------------------------------------
 
 When you execute `op`, Opcode will look for `op.conf` in the current 
-directory.
+directory. See the example [op.conf](op.conf) file for reference.
 
 The syntax of `op.conf` is simple:
 
@@ -52,10 +52,14 @@ You can supply a commit message:
 
     $ op commit "my commit message"
 
-Finally, in some cases, you may want to use the command line arguments in
-different position in your command. Given this configuration:
 
-    deploy: git commit -am "$1" && git push #
+Positional Arguments
+--------------------------------------------------
+
+In some cases, you may want to use the command line arguments in different
+positions in your command. Given this configuration:
+
+    deploy: git commit -am "$1" && git push
 
 You can now run:
 
@@ -63,10 +67,24 @@ You can now run:
 
 and it will be translated to this command
 
-    git commit -am "version 1.1.1" && git push #
+    git commit -am "version 1.1.1" && git push
 
-The `#` at the end is necessary so that bash ignores the entire arguments 
-array, which is always appended at the end.
+This is made possible due to the fact that any command that contains a `$`
+character, will not have the command line arguments (`$@`) appended to it.
+
+Partial Command Matching
+--------------------------------------------------
+
+When running a command, opcode will first try to find an exact match. If none
+is found, it will try to find a command that starts with the code you typed.
+
+In other words, if you have this in your `op.conf` file:
+
+    server: echo "Running Server" && rackup
+
+You can run it with `op server`, `op s` and anything in between. The first 
+matched command will be executed.
+
 
 
 Bash Completion

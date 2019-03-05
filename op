@@ -2,162 +2,166 @@
 # ---------------------------------------------------------------
 # opcode - local command shortcuts
 # ---------------------------------------------------------------
-usage() { 
-  if $LONG_USAGE; then
-    printf "opcode $VERSION - local command shortcuts\n\n"
-  fi
-  printf "Usage:\n"
-  printf "  op CODE [ARGS]\n"
-  if $LONG_USAGE; then
-    printf "    Execute a command from the config file ($CONFIG_FILE)\n"
-    printf "    Arguments will be passed to the command\n\n"
-  fi
-  printf "  op -l | --list\n"
-  if $LONG_USAGE; then
-    printf "    List command codes\n\n"
-  fi
-  printf "  op -s | --show\n"
-  if $LONG_USAGE; then
-    printf "    Show the config file ($CONFIG_FILE)\n\n"
-  fi
-  printf "  op -e | --edit\n"
-  if $LONG_USAGE; then
-    printf "    Open the config file for editing\n\n"
-  fi
-  printf "  op -a | --add CODE COMMAND...\n"
-  if $LONG_USAGE; then
-    printf "    Append a command to the config file\n\n"
-  fi
-  printf "  op -h | --help\n"
-  if $LONG_USAGE; then
-    printf "    Show this message\n\n"
-  fi
-  printf "  op -v | --version\n"
-  if $LONG_USAGE; then
-    printf "    Show version number\n\n"
-  fi
-  printf "  op --complete\n"
-  if $LONG_USAGE; then
-    printf "    Install bash completion\n"
-    printf "    Use with eval: eval \$(op --complete)\n\n"
-  fi
-}
-
-need_config() {
-  if [[ ! -f $CONFIG_FILE ]]; then
-    echo "Cannot find config file ($CONFIG_FILE)"
-    exit 1
-  fi
-}
-
-find_command() {
-  need_config
-  exact="^$CODE:\s*(.+)$"
-  fuzzy="^$CODE[^\:]*:\s*(.+)$"
-
-  while IFS= read -r line || [ -n "$line" ]; do
-    if [[ $line =~ $exact ]]; then
-      COMMAND="${BASH_REMATCH[1]}"
-      break
+opcode_context() {
+  usage() { 
+    if $LONG_USAGE; then
+      printf "opcode $VERSION - local command shortcuts\n\n"
     fi
-
-    if [[ $line =~ $fuzzy ]]; then
-      COMMAND="${BASH_REMATCH[1]}"
-      break
+    printf "Usage:\n"
+    printf "  op CODE [ARGS]\n"
+    if $LONG_USAGE; then
+      printf "    Execute a command from the config file ($CONFIG_FILE)\n"
+      printf "    Arguments will be passed to the command\n\n"
     fi
-  done < $CONFIG_FILE
-}
+    printf "  op -l | --list\n"
+    if $LONG_USAGE; then
+      printf "    List command codes\n\n"
+    fi
+    printf "  op -s | --show\n"
+    if $LONG_USAGE; then
+      printf "    Show the config file ($CONFIG_FILE)\n\n"
+    fi
+    printf "  op -e | --edit\n"
+    if $LONG_USAGE; then
+      printf "    Open the config file for editing\n\n"
+    fi
+    printf "  op -a | --add CODE COMMAND...\n"
+    if $LONG_USAGE; then
+      printf "    Append a command to the config file\n\n"
+    fi
+    printf "  op -h | --help\n"
+    if $LONG_USAGE; then
+      printf "    Show this message\n\n"
+    fi
+    printf "  op -v | --version\n"
+    if $LONG_USAGE; then
+      printf "    Show version number\n\n"
+    fi
+    printf "  op --complete\n"
+    if $LONG_USAGE; then
+      printf "    Install bash completion\n"
+      printf "    Use with eval: eval \$(op --complete)\n\n"
+    fi
+  }
 
-run_command() {
-  find_command
-  if [[ -n $COMMAND ]]; then
-    if [[ $COMMAND =~ \$ ]]; then
-      eval $COMMAND
+  need_config() {
+    if [[ ! -f $CONFIG_FILE ]]; then
+      echo "Cannot find config file ($CONFIG_FILE)"
+      exit 1
+    fi
+  }
+
+  find_command() {
+    need_config
+    exact="^$CODE:\s*(.+)$"
+    fuzzy="^$CODE[^\:]*:\s*(.+)$"
+
+    while IFS= read -r line || [ -n "$line" ]; do
+      if [[ $line =~ $exact ]]; then
+        COMMAND="${BASH_REMATCH[1]}"
+        break
+      fi
+
+      if [[ $line =~ $fuzzy ]]; then
+        COMMAND="${BASH_REMATCH[1]}"
+        break
+      fi
+    done < $CONFIG_FILE
+  }
+
+  run_command() {
+    find_command
+    if [[ -n $COMMAND ]]; then
+      if [[ $COMMAND =~ \$ ]]; then
+        eval $COMMAND
+      else
+        eval $COMMAND "$@"
+      fi
     else
-      eval $COMMAND "$@"
+      echo "Code not found: $CODE"
+      exit 1
     fi
-  else
-    echo "Code not found: $CODE"
-    exit 1
-  fi
-}
+  }
 
-add_command() {
-  new_code=$1
-  shift
-  new_command=$@
-  echo "$new_code: $new_command" >> $CONFIG_FILE
-  show_config
-}
+  add_command() {
+    new_code=$1
+    shift
+    new_command=$@
+    echo "$new_code: $new_command" >> $CONFIG_FILE
+    show_config
+  }
 
-list_codes() {
-  need_config
-  regex="^([^#][^:]*)"
+  list_codes() {
+    need_config
+    regex="^([^#][^:]*)"
 
-  while IFS= read -r line || [ -n "$line" ]; do
-    if [[ $line =~ $regex ]]; then
-      printf "${BASH_REMATCH[1]}   "
+    while IFS= read -r line || [ -n "$line" ]; do
+      if [[ $line =~ $regex ]]; then
+        printf "${BASH_REMATCH[1]}   "
+      fi
+    done < $CONFIG_FILE
+  }
+
+  edit_config() {
+    ${EDITOR:-vi} $CONFIG_FILE
+  }
+
+  show_config() {
+    need_config
+    cat $CONFIG_FILE
+  }
+
+  set_config_file() {
+    if [[ -f "opcode" ]]; then
+      CONFIG_FILE="opcode"
+    else
+      CONFIG_FILE="op.conf"
     fi
-  done < $CONFIG_FILE
+  }
+
+  list_or_usage() {
+    if [[ -f $CONFIG_FILE ]]; then
+      list_codes
+    else
+      usage
+    fi
+  }
+
+  install_completion() {
+    echo "complete -C 'op --completion' op"
+  }
+
+  send_completion() {
+    [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]] && return
+    set $COMP_LINE
+    [[ "$#" -gt "2" ]] && return
+    compgen -W "$(op --list)" "$2"
+  }
+
+  opcode_run() {
+    case "$1" in
+      "" ) list_or_usage ;;
+      -l | --list    ) list_codes ;;
+      -s | --show    ) show_config ;;
+      -e | --edit    ) edit_config ;;
+      -a | --add     ) shift; add_command "$@" ;;
+      -h | --help    ) LONG_USAGE=true; usage ;;
+      -v | --version ) echo $VERSION ;;
+      --complete ) install_completion ;;
+      --completion ) send_completion ;;
+      * ) CODE=$1; shift; run_command "$@" ;;
+    esac
+  }
+
+  opcode_initialize() {
+    VERSION="0.3.1"
+    LONG_USAGE=false
+    set_config_file
+    set -e
+  }
+
+  opcode_initialize
+  opcode_run "$@"
 }
 
-edit_config() {
-  ${EDITOR:-vi} $CONFIG_FILE
-}
-
-show_config() {
-  need_config
-  cat $CONFIG_FILE
-}
-
-set_config_file() {
-  if [[ -f "opcode" ]]; then
-    CONFIG_FILE="opcode"
-  else
-    CONFIG_FILE="op.conf"
-  fi
-}
-
-list_or_usage() {
-  if [[ -f $CONFIG_FILE ]]; then
-    list_codes
-  else
-    usage
-  fi
-}
-
-install_completion() {
-  echo "complete -C 'op --completion' op"
-}
-
-send_completion() {
-  [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]] && return
-  set $COMP_LINE
-  [[ "$#" -gt "2" ]] && return
-  compgen -W "$(op --list)" "$2"
-}
-
-run() {
-  case "$1" in
-    "" ) list_or_usage ;;
-    -l | --list    ) list_codes ;;
-    -s | --show    ) show_config ;;
-    -e | --edit    ) edit_config ;;
-    -a | --add     ) shift; add_command "$@" ;;
-    -h | --help    ) LONG_USAGE=true; usage ;;
-    -v | --version ) echo $VERSION ;;
-    --complete ) install_completion ;;
-    --completion ) send_completion ;;
-    * ) CODE=$1; shift; run_command "$@" ;;
-  esac
-}
-
-initialize() {
-  VERSION="0.3.0"
-  LONG_USAGE=false
-  set_config_file
-  set -e
-}
-
-initialize
-run "$@"
+opcode_context "$@"

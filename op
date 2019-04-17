@@ -154,7 +154,7 @@ opcode_context() {
   }
 
   opcode_initialize() {
-    VERSION="0.3.1"
+    VERSION="0.4.0"
     LONG_USAGE=false
     set_config_file
     set -e

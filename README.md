@@ -13,6 +13,7 @@ This file includes shortcuts to other commands.
 
 For a similar project, but for globally accessible aliases, see [alf][alf].
 
+
 Install
 --------------------------------------------------
 
@@ -22,6 +23,7 @@ The simplest way to install, is to run the installation script:
 
 If you prefer to install manually, simply download the [op](/op) file,
 place it somewhere in your path, and make it executable.
+
 
 Usage
 --------------------------------------------------
@@ -72,6 +74,7 @@ and it will be translated to this command
 This is made possible due to the fact that any command that contains a `$`
 character, will not have the command line arguments (`$@`) appended to it.
 
+
 Partial Command Matching
 --------------------------------------------------
 
@@ -85,6 +88,15 @@ In other words, if you have this in your `op.conf` file:
 You can run it with `op server`, `op s` and anything in between. The first 
 matched command will be executed.
 
+
+Multiline Commands
+--------------------------------------------------
+
+You may split your command to multiple lines by ending the line with a
+backslash, and indenting the subsequent lines by at least one space:
+
+    up: docker-compose build && \
+        docker-compose up web
 
 
 Bash Completion

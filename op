@@ -56,7 +56,7 @@ opcode_context() {
     exact="^$CODE:\s*(.+)$"
     fuzzy="^$CODE[^\:]*:\s*(.+)$"
 
-    while IFS= read -r line || [ -n "$line" ]; do
+    while IFS= read line || [ -n "$line" ]; do
       if [[ $line =~ $exact ]]; then
         COMMAND="${BASH_REMATCH[1]}"
         break
@@ -95,7 +95,7 @@ opcode_context() {
     need_config
     regex="^([^#][^:]*)"
 
-    while IFS= read -r line || [ -n "$line" ]; do
+    while IFS= read line || [ -n "$line" ]; do
       if [[ $line =~ $regex ]]; then
         printf "${BASH_REMATCH[1]}   "
       fi

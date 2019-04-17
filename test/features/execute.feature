@@ -45,3 +45,8 @@ Scenario: Run a command with partial command matching
    When I run "op ba"
    Then the output should say "another command that starts with b"
 
+Scenario: Run a command with multiline config
+  Given I am in the "fixtures/multiline" folder
+   When I run "op who"
+   Then the output should say "who ordered this pizza"
+

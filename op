@@ -21,6 +21,10 @@ opcode_context() {
     if $LONG_USAGE; then
       printf "    Show the config file ($CONFIG_FILE)\n\n"
     fi
+    printf "  op -w | --what CODE\n"
+    if $LONG_USAGE; then
+      printf "    Show the command for a given code\n\n"
+    fi
     printf "  op -e | --edit\n"
     if $LONG_USAGE; then
       printf "    Open the config file for editing\n\n"
@@ -53,6 +57,13 @@ opcode_context() {
 
   find_command() {
     need_config
+
+    if [[ -z $CODE ]]; then
+      echo "Invalid operation"
+      usage
+      exit 1
+    fi
+
     exact="^$CODE:\s*(.+)$"
     fuzzy="^$CODE[^\:]*:\s*(.+)$"
 
@@ -84,9 +95,17 @@ opcode_context() {
   }
 
   add_command() {
+    if [[ $# -lt 2 ]]; then
+      echo "Invalid operation"
+      usage
+      exit 1
+    fi
+
     new_code=$1
+
     shift
     new_command=$@
+
     echo "$new_code: $new_command" >> $CONFIG_FILE
     show_config
   }
@@ -109,6 +128,16 @@ opcode_context() {
   show_config() {
     need_config
     cat $CONFIG_FILE
+  }
+
+  what_command() {
+    find_command
+    if [[ -n $COMMAND ]]; then
+      echo $COMMAND
+    else
+      echo "Code not found: $CODE"
+      exit 1
+    fi
   }
 
   set_config_file() {
@@ -143,6 +172,7 @@ opcode_context() {
       "" ) list_or_usage ;;
       -l | --list    ) list_codes ;;
       -s | --show    ) show_config ;;
+      -w | --what    ) shift; CODE=$1; what_command ;;
       -e | --edit    ) edit_config ;;
       -a | --add     ) shift; add_command "$@" ;;
       -h | --help    ) LONG_USAGE=true; usage ;;

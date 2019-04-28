@@ -9,7 +9,7 @@ Opcode - Local Command Shortcuts
 Opcode lets you define a simple configuration file in any directory.
 This file includes shortcuts to other commands.
 
-![Demo](/demo.gif)
+![Demo](/demo/cast.svg)
 
 For a similar project, but for globally accessible aliases, see [alf][alf].
 

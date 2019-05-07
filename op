@@ -119,6 +119,7 @@ opcode_context() {
         printf "${BASH_REMATCH[1]}   "
       fi
     done < $CONFIG_FILE
+    printf "\n"
   }
 
   edit_config() {

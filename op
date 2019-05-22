@@ -5,12 +5,12 @@
 opcode_context() {
   usage() { 
     if $LONG_USAGE; then
-      printf "opcode $VERSION - local command shortcuts\n\n"
+      printf "opcode %s - local command shortcuts\n\n" "$VERSION"
     fi
     printf "Usage:\n"
     printf "  op CODE [ARGS]\n"
     if $LONG_USAGE; then
-      printf "    Execute a command from the config file ($CONFIG_FILE)\n"
+      printf "    Execute a command from the config file (%s)\n" "$CONFIG_FILE"
       printf "    Arguments will be passed to the command\n\n"
     fi
     printf "  op -l | --list\n"
@@ -19,7 +19,7 @@ opcode_context() {
     fi
     printf "  op -s | --show\n"
     if $LONG_USAGE; then
-      printf "    Show the config file ($CONFIG_FILE)\n\n"
+      printf "    Show the config file (%s)\n\n" "$CONFIG_FILE"
     fi
     printf "  op -w | --what CODE\n"
     if $LONG_USAGE; then
@@ -67,6 +67,7 @@ opcode_context() {
     exact="^$CODE:\s*(.+)$"
     fuzzy="^$CODE[^\:]*:\s*(.+)$"
 
+    # shellcheck disable=SC2162
     while IFS= read line || [ -n "$line" ]; do
       if [[ $line =~ $exact ]]; then
         COMMAND="${BASH_REMATCH[1]}"
@@ -77,16 +78,16 @@ opcode_context() {
         COMMAND="${BASH_REMATCH[1]}"
         break
       fi
-    done < $CONFIG_FILE
+    done < "$CONFIG_FILE"
   }
 
   run_command() {
     find_command
     if [[ -n $COMMAND ]]; then
       if [[ $COMMAND =~ \$ ]]; then
-        eval $COMMAND
+        eval "$COMMAND"
       else
-        eval $COMMAND "$@"
+        eval "$COMMAND" "$@"
       fi
     else
       echo "Code not found: $CODE"
@@ -104,9 +105,9 @@ opcode_context() {
     new_code=$1
 
     shift
-    new_command=$@
+    new_command=$*
 
-    echo "$new_code: $new_command" >> $CONFIG_FILE
+    echo "$new_code: $new_command" >> "$CONFIG_FILE"
     show_config
   }
 
@@ -114,26 +115,28 @@ opcode_context() {
     need_config
     regex="^([^#][^:]*)"
 
+    # shellcheck disable=SC2162
     while IFS= read line || [ -n "$line" ]; do
       if [[ $line =~ $regex ]]; then
-        printf "${BASH_REMATCH[1]}   "
+        printf "%s   " "${BASH_REMATCH[1]}"
       fi
-    done < $CONFIG_FILE
+    done < "$CONFIG_FILE"
     printf "\n"
   }
 
   edit_config() {
-    ${EDITOR:-vi} $CONFIG_FILE
+    ${EDITOR:-vi} "$CONFIG_FILE"
   }
 
   show_config() {
     need_config
-    cat $CONFIG_FILE
+    cat "$CONFIG_FILE"
   }
 
   what_command() {
     find_command
     if [[ -n $COMMAND ]]; then
+      # shellcheck disable=SC2086
       echo $COMMAND
     else
       echo "Code not found: $CODE"
@@ -163,7 +166,7 @@ opcode_context() {
 
   send_completion() {
     [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]] && return
-    set $COMP_LINE
+    set "$COMP_LINE"
     [[ "$#" -gt "2" ]] && return
     compgen -W "$(op --list)" "$2"
   }
@@ -177,7 +180,7 @@ opcode_context() {
       -e | --edit    ) edit_config ;;
       -a | --add     ) shift; add_command "$@" ;;
       -h | --help    ) LONG_USAGE=true; usage ;;
-      -v | --version ) echo $VERSION ;;
+      -v | --version ) echo "$VERSION" ;;
       --complete ) install_completion ;;
       --completion ) send_completion ;;
       * ) CODE=$1; shift; run_command "$@" ;;

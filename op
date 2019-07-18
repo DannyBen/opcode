@@ -166,7 +166,7 @@ opcode_context() {
 
   send_completion() {
     [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]] && return
-    set "$COMP_LINE"
+    set $COMP_LINE
     [[ "$#" -gt "2" ]] && return
     compgen -W "$(op --list)" "$2"
   }

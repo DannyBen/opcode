@@ -6,5 +6,5 @@ cd ./fixtures/empty-dir
 describe "op (in a folder without op.conf)"
   approve "op"
 
-describe "Scenario: Run op --help"
+describe "Run op --help"
   approve "op --help"

@@ -1,0 +1,2 @@
+say: echo say --say -s
+shout: echo shout

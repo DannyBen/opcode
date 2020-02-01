@@ -6,6 +6,6 @@ cd ./test
 source "approvals.bash"
 
 for file in *_spec.sh ; do
-  magenta "\n$file"
+  magenta "\nFILE $file"
   ./$file
 done

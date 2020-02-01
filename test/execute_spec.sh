@@ -10,13 +10,13 @@ describe "Run a basic command"
 describe "Run an invalid command"
   cd ./fixtures/basic
   approve "op nocommand"
-  [[ $? == 0 ]] && fail "Expected non zero exit code (got $?)"
+  expect_exit_code 1
   cd ../../
 
 describe "Run in a folder without op.conf"
   cd ./fixtures/empty-dir
   approve "op nocommand"
-  [[ $? == 0 ]] && fail "Expected non zero exit code (got $?)"
+  expect_exit_code 1
   cd ../../
 
 describe "Run in a folder with opcode config file"

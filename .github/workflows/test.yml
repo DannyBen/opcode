@@ -13,6 +13,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Add current directory to path
+      run: echo "::add-path::$PWD"
+
     - name: Run shellcheck tests
       run: shellcheck op
 

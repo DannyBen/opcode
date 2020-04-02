@@ -1,0 +1,9 @@
+
+[32mdeploy[0m
+  Deploy to production
+  Usage: deploy APPNAME
+
+[32mterminate[0m
+  Terminate everything
+
+[32mhidden[0m

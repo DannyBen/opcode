@@ -20,5 +20,5 @@ jobs:
       run: shellcheck op
 
     - name: Run approval tests
-      run: test/test.sh
+      run: test/approve
 

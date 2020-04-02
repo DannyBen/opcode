@@ -13,6 +13,10 @@ opcode_context() {
       printf "    Execute a command from the config file (%s)\n" "$CONFIG_FILE"
       printf "    Arguments will be passed to the command\n\n"
     fi
+    printf "  op ?\n"
+    if $LONG_USAGE; then
+      printf "    Show all codes and their usage comments (#?)\n\n"
+    fi
     printf "  op -l | --list\n"
     if $LONG_USAGE; then
       printf "    List command codes\n\n"
@@ -64,8 +68,8 @@ opcode_context() {
       exit 1
     fi
 
-    exact="^$CODE:\s*(.+)$"
-    fuzzy="^$CODE[^\:]*:\s*(.+)$"
+    exact="^${CODE}:\s*(.+)$"
+    fuzzy="^${CODE}[^\:]*:\s*(.+)$"
 
     # shellcheck disable=SC2162
     while IFS= read line || [ -n "$line" ]; do
@@ -124,6 +128,23 @@ opcode_context() {
     printf "\n"
   }
 
+  list_codes_extended() {
+    need_config
+    regex="^([^#][^:]*)"
+    comment_regex="^#\? ?(.*)"
+
+    # shellcheck disable=SC2162
+    while IFS= read line || [ -n "$line" ]; do
+      if [[ $line =~ $regex ]]; then
+        printf "\n%s\n" "$(green "${BASH_REMATCH[1]}")"
+      fi
+      if [[ $line =~ $comment_regex ]]; then
+        printf "  %s\n" "${BASH_REMATCH[1]}"
+      fi
+    done < "$CONFIG_FILE"
+    printf "\n"
+  }
+
   edit_config() {
     ${EDITOR:-vi} "$CONFIG_FILE"
   }
@@ -175,6 +196,7 @@ opcode_context() {
   opcode_run() {
     case "$1" in
       "" ) list_or_usage ;;
+      "?"            ) list_codes_extended ;;
       -l | --list    ) list_codes ;;
       -s | --show    ) show_config ;;
       -w | --what    ) shift; CODE=$1; what_command ;;
@@ -188,8 +210,10 @@ opcode_context() {
     esac
   }
 
+  green() { printf "\e[32m%b\e[0m\n" "$*"; }
+
   opcode_initialize() {
-    VERSION="0.4.3"
+    VERSION="0.5.0"
     LONG_USAGE=false
     set_config_file
     set -e

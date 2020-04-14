@@ -6,37 +6,27 @@ on:
 jobs:
   ubuntu:
     name: Ubuntu
-
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
     - name: Add current directory to path
       run: echo "::add-path::$PWD"
-
     - name: Run shellcheck tests
       run: shellcheck op
-
     - name: Run approval tests
       run: test/approve
 
   macos:
     name: macOS
-
     runs-on: macos-latest
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
     - name: Add current directory to path
       run: echo "::add-path::$PWD"
-
     - name: Upgrade the outdated bash
       run: brew install bash
-
     - name: Run approval tests
       run: test/approve
 

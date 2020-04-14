@@ -8,25 +8,25 @@ Usage:
   op ?
     Show all codes and their usage comments (#?)
 
-  op -l | --list
+  op -l, --list
     List command codes
 
-  op -s | --show
+  op -s, --show
     Show the config file (op.conf)
 
-  op -w | --what CODE
+  op -w, --what CODE
     Show the command for a given code
 
-  op -e | --edit
+  op -e, --edit
     Open the config file for editing
 
-  op -a | --add CODE COMMAND...
+  op -a, --add CODE COMMAND...
     Append a command to the config file
 
-  op -h | --help
+  op -h, --help
     Show this message
 
-  op -v | --version
+  op -v, --version
     Show version number
 
   op --complete

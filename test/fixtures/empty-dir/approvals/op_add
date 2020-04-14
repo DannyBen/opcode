@@ -2,11 +2,11 @@ Invalid operation
 Usage:
   op CODE [ARGS]
   op ?
-  op -l | --list
-  op -s | --show
-  op -w | --what CODE
-  op -e | --edit
-  op -a | --add CODE COMMAND...
-  op -h | --help
-  op -v | --version
+  op -l, --list
+  op -s, --show
+  op -w, --what CODE
+  op -e, --edit
+  op -a, --add CODE COMMAND...
+  op -h, --help
+  op -v, --version
   op --complete

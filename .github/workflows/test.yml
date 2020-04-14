@@ -4,7 +4,7 @@ on:
   push: { branches: master }
 
 jobs:
-  test:
+  ubuntu:
     name: Ubuntu
 
     runs-on: ubuntu-latest
@@ -22,7 +22,7 @@ jobs:
     - name: Run approval tests
       run: test/approve
 
-  test:
+  darwin:
     name: Darwin
 
     runs-on: darwin-latest

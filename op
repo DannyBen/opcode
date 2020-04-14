@@ -17,31 +17,31 @@ opcode_context() {
     if $LONG_USAGE; then
       printf "    Show all codes and their usage comments (#?)\n\n"
     fi
-    printf "  op -l | --list\n"
+    printf "  op -l, --list\n"
     if $LONG_USAGE; then
       printf "    List command codes\n\n"
     fi
-    printf "  op -s | --show\n"
+    printf "  op -s, --show\n"
     if $LONG_USAGE; then
       printf "    Show the config file (%s)\n\n" "$CONFIG_FILE"
     fi
-    printf "  op -w | --what CODE\n"
+    printf "  op -w, --what CODE\n"
     if $LONG_USAGE; then
       printf "    Show the command for a given code\n\n"
     fi
-    printf "  op -e | --edit\n"
+    printf "  op -e, --edit\n"
     if $LONG_USAGE; then
       printf "    Open the config file for editing\n\n"
     fi
-    printf "  op -a | --add CODE COMMAND...\n"
+    printf "  op -a, --add CODE COMMAND...\n"
     if $LONG_USAGE; then
       printf "    Append a command to the config file\n\n"
     fi
-    printf "  op -h | --help\n"
+    printf "  op -h, --help\n"
     if $LONG_USAGE; then
       printf "    Show this message\n\n"
     fi
-    printf "  op -v | --version\n"
+    printf "  op -v, --version\n"
     if $LONG_USAGE; then
       printf "    Show version number\n\n"
     fi
@@ -213,7 +213,7 @@ opcode_context() {
   green() { printf "\e[32m%b\e[0m\n" "$*"; }
 
   opcode_initialize() {
-    VERSION="0.5.0"
+    VERSION="0.5.1"
     LONG_USAGE=false
     set_config_file
     set -e

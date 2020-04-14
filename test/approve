@@ -9,3 +9,6 @@ for file in *_spec.sh ; do
   magenta "\nFILE $file"
   ./$file
 done
+
+echo ""
+green "DONE all tests OK"

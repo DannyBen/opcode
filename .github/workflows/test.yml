@@ -25,7 +25,7 @@ jobs:
   darwin:
     name: Darwin
 
-    runs-on: darwin-latest
+    runs-on: macos-latest
 
     steps:
     - name: Checkout code

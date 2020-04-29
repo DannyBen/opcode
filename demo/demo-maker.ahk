@@ -25,7 +25,7 @@ Commands.Push("{Escape}:x{Enter}")
 Commands.Push("op ?")
 Commands.Push("op --help")
 Commands.Push("exit")
-Commands.Push("cat cast.json | svg-term --out cast.svg")
+Commands.Push("cat cast.json | svg-term --out cast.svg --window")
 
 F12::
   Send % Commands[Index]

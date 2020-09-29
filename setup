@@ -1,48 +1,25 @@
 #!/usr/bin/env bash
-echo "This operation will download the opcode bash script to /usr/local/bin/op."
-printf "Continue? [yN] "
-read answer
 
-if [[ $answer =~ [Yy] ]]; then
-  echo ""
-  echo "Downloading from github.com/DannyBen/opcode..."
-
-  CURL_COMMAND="curl -s https://raw.githubusercontent.com/DannyBen/opcode/master/op > /usr/local/bin/op"
-
-  if [[ $EUID -ne 0 ]]; then
-    # not root, need sudo
-    sudo bash -c "$CURL_COMMAND"
-    sudo chmod a+x /usr/local/bin/op
-  else
-    # root
-    bash -c "$CURL_COMMAND"
-    chmod a+x /usr/local/bin/op
-  fi
-
-  if type op > /dev/null; then
-    if ! grep -m 1 "op --complete" "$HOME/.bashrc" > /dev/null; then
-      echo ""
-      echo "Would you like to install bash completion?"
-      echo "This will append 'eval \$(op --complete)' to your ~/.bashrc file"
-      printf "Continue? [yN] "
-      read answer
-      if [[ $answer =~ [Yy] ]]; then
-        printf "\n# Opcode Bash Completion\neval \$(op --complete)\n\n" >> ~/.bashrc
-        echo "Bash completion installed"
-      else
-        echo "Bash completion not installed"
-        echo "To install it manually, add 'eval \$(op --complete)' to your ~/.bashrc"
-      fi
-    fi
-
-    echo ""
-    echo "Done. Type 'op --help' for more info."
-
-  else
-    echo ""
-    echo "Failed downloading."
-    exit 1
-  fi
+echo "=== Saving executable to /usr/local/bin/op"
+CURL_COMMAND="curl -s https://raw.githubusercontent.com/DannyBen/opcode/master/op > /usr/local/bin/op"
+if [[ $EUID -ne 0 ]]; then
+  sudo bash -c "$CURL_COMMAND"
+  sudo chmod a+x /usr/local/bin/op
 else
-  echo "Aborting"
+  bash -c "$CURL_COMMAND"
+  chmod a+x /usr/local/bin/op
+fi
+
+if type op > /dev/null; then
+  if ! grep -m 1 "op --complete" "$HOME/.bashrc" > /dev/null; then
+    echo "=== Appending bash completion command to ~/.bashrc"
+    printf "\n# Opcode Bash Completion\neval \$(op --complete)\n\n" >> ~/.bashrc
+  else
+    echo "=== Bash completion is already present in ~/.bashrc"
+  fi
+
+  echo "=== Done. Type 'op --help' for more info."
+else
+  echo "=== Setup failed."
+  exit 1
 fi

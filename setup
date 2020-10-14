@@ -10,15 +10,26 @@ else
   chmod a+x /usr/local/bin/op
 fi
 
+# If op command exists
 if type op > /dev/null; then
-  if ! grep -m 1 "op --complete" "$HOME/.bashrc" > /dev/null; then
-    echo "=== Appending bash completion command to ~/.bashrc"
-    printf "\n# Opcode Bash Completion\neval \$(op --complete)\n\n" >> ~/.bashrc
+  # If there is a ~/.bashrc
+  if [[ -f "$HOME/.bashrc" ]]; then
+    # If autocomplete was already installed
+    if ! grep -m 1 "op --complete" "$HOME/.bashrc" > /dev/null; then
+      echo "=== Appending completion command to ~/.bashrc"
+      printf "\n# Opcode Completion\neval \$(op --complete)\n\n" >> "$HOME/.bashrc"
+    else
+      echo "=== Completion script is already present in ~/.bashrc"
+    fi
+
+  # No ~/.bashrc, let the user install completion manually if they want
   else
-    echo "=== Bash completion is already present in ~/.bashrc"
+    echo "=== Completion script was not installed"
   fi
 
   echo "=== Done. Type 'op --help' for more info."
+
+# op command could not be found
 else
   echo "=== Setup failed."
   exit 1

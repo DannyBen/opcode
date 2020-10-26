@@ -15,3 +15,8 @@ describe "op --add without arguments"
   rm -f op.conf
   approve "op --add"
   set -e
+
+describe "op --add with quoted arguments"
+  rm -f op.conf
+  approve "op --add say echo \"hello world\" --color"
+  rm -f op.conf

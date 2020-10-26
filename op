@@ -109,12 +109,26 @@ opcode_context() {
     new_code=$1
 
     shift
-    new_command=$*
+    new_command=$(shellwords "${@}")
 
     echo "$new_code: $new_command" >> "$CONFIG_FILE"
     show_config
   }
 
+  shellwords() {
+    input=( "$@" )
+    declare -a output
+    
+    for word in "${input[@]}"; do
+      if [[ $word =~ [[:space:]] ]]; then
+        output+=( "\"$word\"" )
+      else
+        output+=( "$word" )
+      fi
+    done
+
+    echo "${output[@]}"
+  }
   list_codes() {
     need_config
     regex="^([^#][^:]*)"
@@ -213,7 +227,7 @@ opcode_context() {
   green() { printf "\e[32m%b\e[0m\n" "$*"; }
 
   opcode_initialize() {
-    VERSION="0.5.1"
+    VERSION="0.5.2"
     LONG_USAGE=false
     set_config_file
     set -e

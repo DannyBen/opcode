@@ -19,5 +19,4 @@ describe "op --add without arguments"
 describe "op --add with quoted arguments"
   rm -f op.conf
   approve "op --add say echo \"hello world\" --color"
-  approve "op --show" "op_show_quoted"
   rm -f op.conf

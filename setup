@@ -17,7 +17,6 @@ if type op > /dev/null; then
     rcfile="$HOME/.bashrc"
   elif [[ -f "$HOME/.zshrc" ]]; then
     rcfile="$HOME/.zshrc"
-    extra="autoload -U +X compinit && compinit && autoload -U +X bashcompinit && bashcompinit"
   fi
 
   # If we know which rc file to work with
@@ -26,8 +25,9 @@ if type op > /dev/null; then
     if ! grep -m 1 "op --complete" "$rcfile" > /dev/null; then
       echo "=== Appending completion command to $rcfile"
       printf "\n# Opcode Completion\n" >> "$rcfile"
-      [[ -n "$extra" ]] && printf "%s\n" "$extra" >> "$rcfile"
-      printf "eval \$(op --complete)\n\n" >> "$rcfile"
+      printf "if command -v complete &> /dev/null ; then\n" >> "$rcfile"
+      printf "  eval \$(op --complete)\n" >> "$rcfile"
+      printf "fi\n\n" >> "$rcfile"
     else
       echo "=== Completion script is already present in $rcfile"
     fi

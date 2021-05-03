@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  bash:
+    build: .
+    entrypoint: bash
+    <<: &default
+      image: dannyben/opcode
+      volumes: 
+      - .:/app
+      - ./op:/usr/local/bin/op
+
+  zsh: &zsh
+    <<: *default
+    environment:
+      PS1: "zsh %/ $$ "
+    entrypoint: zsh

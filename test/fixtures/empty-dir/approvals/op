@@ -8,4 +8,3 @@ Usage:
   op -a, --add CODE COMMAND...
   op -h, --help
   op -v, --version
-  op --complete

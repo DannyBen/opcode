@@ -9,9 +9,6 @@ source 'approvals.bash'
 
 cd ./fixtures/completion
 
-describe 'op --complete'
-  approve "op --complete"
-
 describe "Run op only and press tab to cycle through all commands"
   export COMP_LINE=op
   approve "op --completion"

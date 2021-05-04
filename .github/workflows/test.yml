@@ -37,7 +37,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
     - name: Run setup
-      run: ./setup
+      run: bash setup
     - name: Test setup artifacts
       run: test/setup_artifacts
 

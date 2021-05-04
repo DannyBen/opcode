@@ -9,20 +9,25 @@ fi
 # Download script from Github
 echo "=== Saving executable to /usr/local/bin/op"
 curl_command="curl -s https://raw.githubusercontent.com/DannyBen/opcode/master/op > /usr/local/bin/op"
-$sudo bash -c "$curl_command"
-$sudo chmod a+x /usr/local/bin/op
+# $sudo bash -c "$curl_command"
+# $sudo chmod a+x /usr/local/bin/op
 
 # Install completions
-if command -v pkg-config &> /dev/null ; then
-  completions_dir=$(pkg-config --variable=completionsdir bash-completion)
-  if [[ -n $completions_dir ]] ; then
-    echo "=== Installing autocompletions in $completions_dir"
-    echo "complete -C 'op --completion' op" | $sudo tee "${completions_dir}/op" > /dev/null
-  else
-    echo "=== Completion script was not installed"
-  fi
+if [[ -d "/usr/share/bash-completion/completions" ]]; then
+  compdir="/usr/share/bash-completion/completions"
+elif [[ -d "$BASH_COMPLETION" ]]; then
+  compdir="$BASH_COMPLETION"
+else
+  compdir=''
+fi
+
+if [[ -n $compdir ]]; then
+  echo "=== Installing autocompletions to $compdir"
+  echo "complete -C 'op --completion' op" | $sudo tee "${compdir}/op" > /dev/null
 else
   echo "=== Completion script was not installed"
+  echo "    To install it manually add this to your startup script:"
+  echo "    complete -C 'op --completion' op"
 fi
 
 # Verify

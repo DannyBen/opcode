@@ -1,45 +1,38 @@
 #!/usr/bin/env bash
 
-echo "=== Saving executable to /usr/local/bin/op"
-CURL_COMMAND="curl -s https://raw.githubusercontent.com/DannyBen/opcode/master/op > /usr/local/bin/op"
+# Figure out if we need sudo or not
+sudo=''
 if [[ $EUID -ne 0 ]]; then
-  sudo bash -c "$CURL_COMMAND"
-  sudo chmod a+x /usr/local/bin/op
-else
-  bash -c "$CURL_COMMAND"
-  chmod a+x /usr/local/bin/op
+  sudo='sudo'
 fi
 
-# If op command exists
+# Download script from Github
+echo "=== Saving executable to /usr/local/bin/op"
+curl_command="curl -s https://raw.githubusercontent.com/DannyBen/opcode/master/op > /usr/local/bin/op"
+$sudo bash -c "$curl_command"
+$sudo chmod a+x /usr/local/bin/op
+
+# Install completions
+if [[ -d "/usr/share/bash-completion/completions" ]]; then
+  compdir="/usr/share/bash-completion/completions"
+elif [[ -d "/usr/local/etc/bash_completion.d" ]]; then
+  compdir="/usr/local/etc/bash_completion.d"
+else
+  compdir=''
+fi
+
+if [[ -n $compdir ]]; then
+  echo "=== Installing autocompletions to $compdir"
+  echo "complete -C 'op --completion' op" | $sudo tee "${compdir}/op" > /dev/null
+else
+  echo "=== Completion script was not installed"
+  echo "    To install it manually add this to your startup script:"
+  echo "    complete -C 'op --completion' op"
+fi
+
+# Verify
 if type op > /dev/null; then
-  # Which rcfile are we installing completion to?
-  if [[ -f "$HOME/.bashrc" ]]; then
-    rcfile="$HOME/.bashrc"
-  elif [[ -f "$HOME/.zshrc" ]]; then
-    rcfile="$HOME/.zshrc"
-  fi
-
-  # If we know which rc file to work with
-  if [[ -n "$rcfile" ]]; then
-    # If autocomplete was already installed
-    if ! grep -m 1 "op --complete" "$rcfile" > /dev/null; then
-      echo "=== Appending completion command to $rcfile"
-      printf "\n# Opcode Completion\n" >> "$rcfile"
-      printf "if command -v complete &> /dev/null ; then\n" >> "$rcfile"
-      printf "  eval \$(op --complete)\n" >> "$rcfile"
-      printf "fi\n\n" >> "$rcfile"
-    else
-      echo "=== Completion script is already present in $rcfile"
-    fi
-
-  # No ~/.bashrc or ~/.zshrc
-  else
-    echo "=== Completion script was not installed"
-  fi
-
   echo "=== Done. Type 'op --help' for more info."
-
-# op command could not be found
 else
   echo "=== Setup failed."
   exit 1

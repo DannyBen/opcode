@@ -45,11 +45,6 @@ opcode_context() {
     if $LONG_USAGE; then
       printf "    Show version number\n\n"
     fi
-    printf "  op --complete\n"
-    if $LONG_USAGE; then
-      printf "    Install bash completion\n"
-      printf "    Use with eval: eval \$(op --complete)\n\n"
-    fi
   }
 
   need_config() {
@@ -195,10 +190,6 @@ opcode_context() {
     fi
   }
 
-  install_completion() {
-    echo "complete -C 'op --completion' op"
-  }
-
   send_completion() {
     [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]] && return
     # shellcheck disable=SC2086
@@ -218,7 +209,6 @@ opcode_context() {
       -a | --add     ) shift; add_command "$@" ;;
       -h | --help    ) LONG_USAGE=true; usage ;;
       -v | --version ) echo "$VERSION" ;;
-      --complete ) install_completion ;;
       --completion ) send_completion ;;
       * ) CODE=$1; shift; run_command "$@" ;;
     esac

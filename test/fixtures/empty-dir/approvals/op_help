@@ -28,7 +28,3 @@ Usage:
 
   op -v, --version
     Show version number
-
-  op --complete
-    Install bash completion
-    Use with eval: eval $(op --complete)

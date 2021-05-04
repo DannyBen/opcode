@@ -1,9 +1,35 @@
 #!/usr/bin/env bash
 set -e
 
-# Check that both files are in their place (after running setup)
-op_file=/usr/local/bin/op
-completion_file=$(pkg-config --variable=completionsdir bash-completion)/op
-[[ -f "$op_file" ]] || (echo "ERROR: File not found $op_file" && exit 1)
-[[ -f "$completion_file" ]] || (echo "ERROR: File not found $completion_file" && exit 1)
+check_file() {
+  file="$1"
+  if [[ ! -f "$file" ]]; then
+    echo "ERROR: File not found $file"
+    exit 1
+  fi
+}
+
+get_comp_dir() {
+  if [[ -d "/usr/share/bash-completion/completions" ]]; then
+    echo "/usr/share/bash-completion/completions"
+  elif [[ -d "$BASH_COMPLETION" ]]; then
+    echo "$BASH_COMPLETION"
+  else
+    echo ''
+  fi
+}
+
+# Check that 'op' is in its place
+check_file "/usr/local/bin/op"
+
+# Check that we can find the completions dir
+compdir="$(get_comp_dir)"
+if [[ ! -d "$compdir" ]]; then
+  echo "ERROR: Cannot find compdir"
+  exit 1
+fi
+
+# Check that completions file is in place
+check_file "$compdir/op"
+
 echo "Setup artifacts are OK"

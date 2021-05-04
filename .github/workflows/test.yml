@@ -30,3 +30,14 @@ jobs:
     - name: Run approval tests
       run: test/approve
 
+  ubuntu_setup:
+    name: Ubuntu Setup
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Run setup
+      run: ./setup
+    - name: Test setup artifacts
+      run: test/setup_artifacts
+

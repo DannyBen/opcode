@@ -9,8 +9,8 @@ fi
 # Download script from Github
 echo "=== Saving executable to /usr/local/bin/op"
 curl_command="curl -s https://raw.githubusercontent.com/DannyBen/opcode/master/op > /usr/local/bin/op"
-# $sudo bash -c "$curl_command"
-# $sudo chmod a+x /usr/local/bin/op
+$sudo bash -c "$curl_command"
+$sudo chmod a+x /usr/local/bin/op
 
 # Install completions
 if [[ -d "/usr/share/bash-completion/completions" ]]; then

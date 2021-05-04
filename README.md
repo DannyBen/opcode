@@ -3,7 +3,7 @@
 
 # Opcode - Local Command Shortcuts
 
-![Version](https://img.shields.io/badge/version-0.5.2-blue.svg)
+![Version](https://img.shields.io/badge/version-0.6.0-blue.svg)
 ![Test](https://github.com/DannyBen/opcode/workflows/Test/badge.svg)
 
 </div>
@@ -147,13 +147,13 @@ up: docker-compose build && \
 ## Bash Completion
 
 Opcode comes with bash completion. If you install opcode using the setup 
-script, bash completion installation will be offered to you.
+script, bash completion installation will be installed automatically.
 
 If you install opcode manually, and would like to enable bash completion, 
 simply add this to your `~/.bashrc`:
 
 ```shell
-eval $(op --complete)
+complete -C 'op --completion' op
 ```
 
 

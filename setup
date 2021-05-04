@@ -15,8 +15,8 @@ $sudo chmod a+x /usr/local/bin/op
 # Install completions
 if [[ -d "/usr/share/bash-completion/completions" ]]; then
   compdir="/usr/share/bash-completion/completions"
-elif [[ -d "$BASH_COMPLETION" ]]; then
-  compdir="$BASH_COMPLETION"
+elif [[ -d "/usr/local/etc/bash_completion.d" ]]; then
+  compdir="/usr/local/etc/bash_completion.d"
 else
   compdir=''
 fi

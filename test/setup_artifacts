@@ -12,8 +12,8 @@ check_file() {
 get_comp_dir() {
   if [[ -d "/usr/share/bash-completion/completions" ]]; then
     echo "/usr/share/bash-completion/completions"
-  elif [[ -d "$BASH_COMPLETION" ]]; then
-    echo "$BASH_COMPLETION"
+  elif [[ -d "/usr/local/etc/bash_completion.d" ]]; then
+    echo "/usr/local/etc/bash_completion.d"
   else
     echo ''
   fi
@@ -27,7 +27,8 @@ compdir="$(get_comp_dir)"
 if [[ -d "$compdir" ]]; then
   check_file "$compdir/op"
 else
-  echo "WARNING: Cannot find compdir, completions not installed"
+  echo "ERROR: Cannot find compdir, completions not installed"
+  exit 1
 fi
 
 echo "Setup artifacts are OK"

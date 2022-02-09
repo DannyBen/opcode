@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+# set -e
 source 'approvals.bash'
 
 describe "op (in a folder with op.conf)"

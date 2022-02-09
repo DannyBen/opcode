@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+# set -e
 source 'approvals.bash'
 
 # The commands described in this feature are not directly executed by the

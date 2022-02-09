@@ -67,6 +67,42 @@ You can supply a commit message:
 $ op commit "my commit message"
 ```
 
+## Additional Usage Utilities
+
+```
+$ op --help
+
+Usage:
+  op CODE [ARGS]
+    Execute a command from the config file (op.conf)
+    Arguments will be passed to the command
+
+  op ?
+    Show all codes and their usage comments (#?)
+
+  op -l, --list
+    List command codes
+
+  op -s, --show
+    Show the config file (op.conf)
+
+  op -w, --what CODE
+    Show the command for a given code
+
+  op -e, --edit
+    Open the config file for editing
+
+  op -a, --add CODE COMMAND...
+    Append a command to the config file
+
+  op -h, --help
+    Show this message
+
+  op -v, --version
+    Show version number
+```
+
+
 ## Positional Arguments
 
 In some cases, you may want to use the command line arguments in different

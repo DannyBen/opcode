@@ -146,8 +146,8 @@ up: docker-compose build && \
 
 ## Bash Completion
 
-Opcode comes with bash completion. If you install opcode using the setup 
-script, bash completion installation will be installed automatically.
+Opcode comes with bash completion. If you install opcode using the setup script,
+bash completion will be installed automatically.
 
 If you install opcode manually, and would like to enable bash completion, 
 simply add this to your `~/.bashrc`:

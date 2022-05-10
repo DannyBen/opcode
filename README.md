@@ -23,7 +23,7 @@ For a similar project, but for globally accessible aliases, see [alf][alf].
 The simplest way to install, is to run the installation script:
 
 ```shell
-$ bash <(curl -Ls get.dannyb.co/opcode/setup)
+$ curl -Ls get.dannyb.co/opcode/setup | bash
 ```
 
 If you prefer to install manually, simply download the [op](/op) file,

@@ -9,13 +9,13 @@ describe "Run a basic command"
 
 describe "Run an invalid command"
   cd ./fixtures/basic
-  approve "op nocommand"
+  approve "op nocommand" || return 0
   expect_exit_code 1
   cd ../../
 
 describe "Run in a folder without op.conf"
   cd ./fixtures/empty-dir
-  approve "op nocommand"
+  approve "op nocommand" || return 0
   expect_exit_code 1
   cd ../../
 

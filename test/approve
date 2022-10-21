@@ -9,6 +9,3 @@ for file in *_spec.sh ; do
   context "$file"
   ./$file
 done
-
-echo ""
-green "All OK"

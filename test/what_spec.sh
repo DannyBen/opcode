@@ -14,12 +14,12 @@ describe "op -w <multiline ommand>"
 
 describe "op -w <code that does not exist>"
   cd ./fixtures/basic
-  approve "op -w nonono"
+  approve "op -w nonono" || return 0
   expect_exit_code 1
   cd ../../
 
 describe "op -w"
   cd ./fixtures/basic
-  approve "op -w"
+  approve "op -w" || return 0
   expect_exit_code 1
   cd ../../

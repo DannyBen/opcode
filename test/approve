@@ -6,9 +6,9 @@ cd ./test
 source "approvals.bash"
 
 for file in *_spec.sh ; do
-  magenta "\nFILE $file"
+  context "$file"
   ./$file
 done
 
 echo ""
-green "DONE all tests OK"
+green "All OK"

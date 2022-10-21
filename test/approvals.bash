@@ -1,4 +1,4 @@
-# approvals.bash v0.2.6
+# approvals.bash v0.3.0
 #
 # Interactive approval testing for Bash.
 # https://github.com/DannyBen/approvals.bash
@@ -26,7 +26,7 @@ approve() {
   fi
 
   if [[ "$(printf "%b" "$actual")" = "$(printf "%b" "$expected")" ]]; then
-    green "PASS $cmd"
+    pass "$cmd"
   else
     echo "--- [$(blue "diff: $cmd")] ---"
     $diff_cmd <(printf "%b" "$expected\n") <(printf "%b" "$actual\n" )  | tail -n +4
@@ -36,16 +36,21 @@ approve() {
 }
 
 describe() {
-  cyan "TEST $*"
+  echo "  $*"
+}
+
+context() {
+  echo
+  echo "$*"
 }
 
 fail() {
-  red "FAIL $*"
+  red "    FAILED $*"
   exit 1
 }
 
 pass() {
-  green "PASS $*"
+  green "    approved: $*"
   return 0
 }
 
@@ -76,7 +81,7 @@ user_approval() {
 
   echo 
   printf "[A]pprove? \n"
-  read -r -n 1 response
+  response=$(bash -c "read -n 1 key; echo \$key")
   printf "\r"
   if [[ $response =~ [Aa] ]]; then
     printf "%b\n" "$actual" > "$approval_file"

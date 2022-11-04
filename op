@@ -93,6 +93,7 @@ opcode_context() {
       if [[ $COMMAND =~ \$ ]]; then
         eval "$COMMAND"
       else
+        # shellcheck disable=SC2294
         eval "$COMMAND" "$@"
       fi
     else

@@ -46,6 +46,13 @@ describe "Run a command with partial command matching"
   approve "op ba"
   cd ../../
 
+describe "Run a command with partial and exact command matching"
+  cd ./fixtures/partial
+  approve "op debug"
+  approve "op deb"
+  approve "op d"
+  cd ../../
+
 describe "Run a command with multiline config"
   cd ./fixtures/multiline
   approve "op who"

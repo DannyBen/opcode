@@ -72,7 +72,14 @@ opcode_context() {
         COMMAND="${BASH_REMATCH[1]}"
         break
       fi
+    done < "$CONFIG_FILE"
 
+    if [[ -n "$COMMAND" ]]; then
+      return
+    fi
+
+    # shellcheck disable=SC2162
+    while IFS= read line || [ -n "$line" ]; do
       if [[ $line =~ $fuzzy ]]; then
         COMMAND="${BASH_REMATCH[1]}"
         break
@@ -86,6 +93,7 @@ opcode_context() {
       if [[ $COMMAND =~ \$ ]]; then
         eval "$COMMAND"
       else
+        # shellcheck disable=SC2294
         eval "$COMMAND" "$@"
       fi
     else
@@ -217,7 +225,7 @@ opcode_context() {
   green() { printf "\e[32m%b\e[0m\n" "$*"; }
 
   opcode_initialize() {
-    VERSION="0.6.0"
+    VERSION="0.6.1"
     LONG_USAGE=false
     set_config_file
     set -e

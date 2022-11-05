@@ -63,8 +63,8 @@ opcode_context() {
       exit 1
     fi
 
-    exact="^${CODE}:\s*(.+)$"
-    fuzzy="^${CODE}[^\:]*:\s*(.+)$"
+    exact="^${CODE}:[[:space:]]*(.+)$"
+    fuzzy="^${CODE}[^\:]*:[[:space:]]*(.+)$"
 
     # shellcheck disable=SC2162
     while IFS= read line || [ -n "$line" ]; do
@@ -174,7 +174,7 @@ opcode_context() {
 
   what_command() {
     if [[ -z "$CODE" ]]; then
-      regex="^([^#][^:]*):\s*(.+)$"
+      regex="^([^#][^:]*):[[:space:]]*(.+)$"
 
       # shellcheck disable=SC2162
       while IFS= read line || [ -n "$line" ]; do
@@ -182,7 +182,6 @@ opcode_context() {
           printf "%s: %s\n" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
         fi
       done < "$CONFIG_FILE"
-      printf "\n"
 
     else
       find_command

@@ -174,7 +174,8 @@ opcode_context() {
 
   what_command() {
     if [[ -z "$CODE" ]]; then
-      for CODE in $(list_codes);  do
+      local commands=( $(list_codes) )
+      for CODE in "${commands[@]}"; do
         find_command
         echo "$CODE: $COMMAND"
       done

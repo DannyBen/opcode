@@ -174,11 +174,16 @@ opcode_context() {
 
   what_command() {
     if [[ -z "$CODE" ]]; then
-      local commands=( $(list_codes) )
-      for CODE in "${commands[@]}"; do
-        find_command
-        echo "$CODE: $COMMAND"
-      done
+      regex="^([^#][^:]*):\s*(.+)$"
+
+      # shellcheck disable=SC2162
+      while IFS= read line || [ -n "$line" ]; do
+        if [[ $line =~ $regex ]]; then
+          printf "%s: %s\n" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+        fi
+      done < "$CONFIG_FILE"
+      printf "\n"
+
     else
       find_command
       if [[ -n $COMMAND ]]; then
@@ -188,6 +193,7 @@ opcode_context() {
         echo "Code not found: $CODE"
         exit 1
       fi
+
     fi
   }
 

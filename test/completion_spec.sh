@@ -21,6 +21,11 @@ describe "Run the completion command with multiple matches"
   export COMP_LINE="op b"
   approve "op --completion" "op_compoletion_op_b"
 
+describe "Run the completion command with -w"
+  export COMP_LINE="op -w b"
+  approve "op --completion" "op_compoletion_op_b"
+  # note: same approval file as previous test, expecting same output
+
 describe "Run the completion command in a folder without op.conf"
   export COMP_LINE="op "
   cd ../empty-dir

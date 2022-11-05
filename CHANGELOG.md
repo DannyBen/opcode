@@ -1,6 +1,13 @@
 Change Log
 ========================================
 
+v0.6.2 - 2022-11-05
+----------------------------------------
+
+- Enable bash completions for 'op -w' as well
+- Allow running 'op -w' without code to see all codes and commands
+
+
 v0.6.1 - 2022-11-04
 ----------------------------------------
 

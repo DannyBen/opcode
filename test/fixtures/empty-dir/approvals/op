@@ -3,7 +3,7 @@ Usage:
   op ?
   op -l, --list
   op -s, --show
-  op -w, --what CODE
+  op -w, --what [CODE]
   op -e, --edit
   op -a, --add CODE COMMAND...
   op -h, --help

@@ -202,8 +202,11 @@ opcode_context() {
     [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]] && return
     # shellcheck disable=SC2086
     set $COMP_LINE
-    [[ "$#" -gt "2" ]] && return
-    compgen -W "$(op --list)" "$2"
+    if [[ $# -eq 1 ]]; then
+      compgen -W "$(op --list)"
+    else
+      compgen -W "$(op --list)" "${@: -1}"
+    fi
   }
 
   opcode_run() {

@@ -20,6 +20,5 @@ describe "op -w <code that does not exist>"
 
 describe "op -w"
   cd ./fixtures/basic
-  approve "op -w" || return 0
-  expect_exit_code 1
+  approve "op -w"
   cd ../../

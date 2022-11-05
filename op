@@ -25,9 +25,9 @@ opcode_context() {
     if $LONG_USAGE; then
       printf "    Show the config file (%s)\n\n" "$CONFIG_FILE"
     fi
-    printf "  op -w, --what CODE\n"
+    printf "  op -w, --what [CODE]\n"
     if $LONG_USAGE; then
-      printf "    Show the command for a given code\n\n"
+      printf "    Show the command for a given code or all codes\n\n"
     fi
     printf "  op -e, --edit\n"
     if $LONG_USAGE; then
@@ -132,6 +132,7 @@ opcode_context() {
 
     echo "${output[@]}"
   }
+  
   list_codes() {
     need_config
     regex="^([^#][^:]*)"
@@ -172,13 +173,20 @@ opcode_context() {
   }
 
   what_command() {
-    find_command
-    if [[ -n $COMMAND ]]; then
-      # shellcheck disable=SC2086
-      echo $COMMAND
+    if [[ -z "$CODE" ]]; then
+      for CODE in $(list_codes);  do
+        find_command
+        echo "$CODE: $COMMAND"
+      done
     else
-      echo "Code not found: $CODE"
-      exit 1
+      find_command
+      if [[ -n $COMMAND ]]; then
+        # shellcheck disable=SC2086
+        echo $COMMAND
+      else
+        echo "Code not found: $CODE"
+        exit 1
+      fi
     fi
   }
 

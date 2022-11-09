@@ -135,12 +135,15 @@ opcode_context() {
   
   list_codes() {
     need_config
-    regex="^([^#][^:]*)"
+    regex="^([^#][^:]+):"
+    break_regex="^[[:space:]]*private[[:space:]]*$"
 
     # shellcheck disable=SC2162
     while IFS= read line || [ -n "$line" ]; do
       if [[ $line =~ $regex ]]; then
         printf "%s   " "${BASH_REMATCH[1]}"
+      elif [[ $line =~ $break_regex ]]; then
+        break
       fi
     done < "$CONFIG_FILE"
     printf "\n"
@@ -148,11 +151,15 @@ opcode_context() {
 
   list_codes_extended() {
     need_config
-    regex="^([^#][^:]*)"
+    regex="^([^#][^:]+):"
     comment_regex="^#\? ?(.*)"
+    break_regex="^[[:space:]]*private[[:space:]]*$"
 
     # shellcheck disable=SC2162
     while IFS= read line || [ -n "$line" ]; do
+      if [[ $line =~ $break_regex ]]; then
+        break
+      fi
       if [[ $line =~ $regex ]]; then
         printf "\n%s\n" "$(green "${BASH_REMATCH[1]}")"
       fi

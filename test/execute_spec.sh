@@ -58,3 +58,8 @@ describe "Run a command with multiline config"
   approve "op who"
   cd ../../
 
+describe "Run a private command"
+  cd ./fixtures/private
+  approve "op three"
+  cd ../../
+

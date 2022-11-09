@@ -16,3 +16,13 @@ describe "op (when op.conf has multiline codes)"
   cd "./fixtures/multiline"
   approve "op"
   cd ../../
+
+describe "op (with a line that does not contain a colon)"
+  cd "./fixtures/rogue-line"
+  approve "op"
+  cd ../../
+
+describe "op (with private commands)"
+  cd "./fixtures/private"
+  approve "op"
+  cd ../../

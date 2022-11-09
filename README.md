@@ -180,6 +180,24 @@ up: docker-compose build && \
 ```
 
 
+## Private Commands
+
+Using the keyword `private` in a separate line anywhere in your `op.conf` file
+will hide all subsequent commands from `op ?` and `op --list`. The private
+commands can still be executed.
+
+```shell
+deploy: op clean && op build
+test: docker compose run test
+
+private
+
+clean: rm tmp/*
+build: docker build
+
+```
+
+
 ## Bash Completion
 
 Opcode comes with bash completion. If you install opcode using the setup script,

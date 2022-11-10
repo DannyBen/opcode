@@ -3,7 +3,7 @@
 
 # Opcode - Local Command Shortcuts
 
-![Version](https://img.shields.io/badge/version-0.6.2-blue.svg)
+![Version](https://img.shields.io/badge/version-0.6.3-blue.svg)
 ![Test](https://github.com/DannyBen/opcode/workflows/Test/badge.svg)
 
 </div>
@@ -177,6 +177,24 @@ backslash, and indenting the subsequent lines by at least one space:
 ```shell
 up: docker-compose build && \
     docker-compose up web
+```
+
+
+## Private Commands
+
+Using the keyword `private` in a separate line anywhere in your `op.conf` file
+will hide all subsequent commands from `op ?` and `op --list`. The private
+commands can still be executed.
+
+```shell
+deploy: op clean && op build
+test: docker compose run test
+
+private
+
+clean: rm tmp/*
+build: docker build
+
 ```
 
 

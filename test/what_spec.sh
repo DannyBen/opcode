@@ -22,3 +22,8 @@ describe "op -w"
   cd ./fixtures/basic
   approve "op -w"
   cd ../../
+
+describe "op -w (with private commands)"
+  cd ./fixtures/private
+  approve "op -w"
+  cd ../../

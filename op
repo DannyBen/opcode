@@ -252,7 +252,7 @@ opcode_context() {
   green() { printf "\e[32m%b\e[0m\n" "$*"; }
 
   opcode_initialize() {
-    VERSION="0.6.2"
+    VERSION="0.6.3"
     LONG_USAGE=false
     set_config_file
     set -e

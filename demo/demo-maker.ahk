@@ -5,37 +5,43 @@
 #SingleInstance Force
 SetkeyDelay 0, 50
 
-Commands := []
-Index := 1
+Return
 
-Commands.Push("cd demo {;} rm cast.json op.conf")
-Commands.Push("asciinema rec cast.json")
-Commands.Push("op")
-Commands.Push("op --add say echo hello world")
-Commands.Push("cat op.conf")
-Commands.Push("op --show")
-Commands.Push("op say")
-Commands.Push("op -a greet echo Hi")
-Commands.Push("op greet Bobby")
-Commands.Push("op --edit")
-Commands.Push("i{End}{Enter}{#}? This is an optional usage comment{Enter}")
-Commands.Push("{Down}{End}{Enter}{#}? Greet someone{Enter}")
-Commands.Push("{#}? Usage: op greet NAME{Enter}")
-Commands.Push("{Escape}:x{Enter}")
-Commands.Push("op ?")
-Commands.Push("op --help")
-Commands.Push("exit")
-Commands.Push("cat cast.json | svg-term --out cast.svg --window")
+Type(Command, Delay=2000) {
+  Send % Command
+  Sleep 500
+  Send {Enter}
+  Sleep Delay
+}
 
 F12::
-  Send % Commands[Index]
-  Index := Index + 1
+  Type("{#} Press F11 to abort at any time")
+  Type("cd ./demo {;} rm cast.json op.conf")
+  Type("asciinema rec cast.json")
+  Type("op")
+  Type("op --add say echo hello world")
+  Type("cat op.conf")
+  Type("op --show")
+  Type("op say")
+  Type("op -a greet echo Hi")
+  Type("op greet Bobby")
+  Type("op --edit")
+  Type("i{End}{Enter}{#}? This is an optional usage comment")
+  Type("{Down}{End}{Enter}{#}? Greet someone")
+  Type("{#}? Usage: op greet NAME")
+  Type("{Escape}:x{Enter}")
+  Type("op ?")
+  Type("op --help")
+  Type("exit")
+  Type("agg --font-size 20 cast.json cast.gif")
+  Type("cd ..")
+  Type("{#} Done")
 return
 
 ^F12::
   Reload
 return
 
-^x::
+F11::
   ExitApp
 return

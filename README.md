@@ -13,7 +13,7 @@
 Opcode lets you define a simple configuration file in any directory.
 This file includes shortcuts to other commands.
 
-![Demo](/demo/cast.svg)
+![Demo](/demo/cast.gif)
 
 For a similar project, but for globally accessible aliases, see [alf][alf].
 

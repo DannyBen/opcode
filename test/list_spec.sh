@@ -26,3 +26,8 @@ describe "op (with private commands)"
   cd "./fixtures/private"
   approve "op"
   cd ../../
+
+describe "op (with one character commands)"
+  cd "./fixtures/one-char"
+  approve "op"
+  cd ../../

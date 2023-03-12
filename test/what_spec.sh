@@ -27,3 +27,8 @@ describe "op -w (with private commands)"
   cd ./fixtures/private
   approve "op -w"
   cd ../../
+
+describe "op -w (with single char commands)"
+  cd ./fixtures/one-char
+  approve "op -w"
+  cd ../../

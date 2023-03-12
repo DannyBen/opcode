@@ -1,6 +1,13 @@
 Change Log
 ========================================
 
+v0.6.4 - 2023-03-12
+----------------------------------------
+
+- Fix inability to use a one character command
+- Normalize with shfmt and shellcheck
+
+
 v0.6.3 - 2022-11-10
 ----------------------------------------
 

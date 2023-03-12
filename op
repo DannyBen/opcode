@@ -3,7 +3,7 @@
 # opcode - local command shortcuts
 # ---------------------------------------------------------------
 opcode_context() {
-  usage() { 
+  usage() {
     if $LONG_USAGE; then
       printf "opcode %s - local command shortcuts\n\n" "$VERSION"
     fi
@@ -72,7 +72,7 @@ opcode_context() {
         COMMAND="${BASH_REMATCH[1]}"
         break
       fi
-    done < "$CONFIG_FILE"
+    done <"$CONFIG_FILE"
 
     if [[ -n "$COMMAND" ]]; then
       return
@@ -84,7 +84,7 @@ opcode_context() {
         COMMAND="${BASH_REMATCH[1]}"
         break
       fi
-    done < "$CONFIG_FILE"
+    done <"$CONFIG_FILE"
   }
 
   run_command() {
@@ -114,25 +114,25 @@ opcode_context() {
     shift
     new_command=$(shellwords "${@}")
 
-    echo "$new_code: $new_command" >> "$CONFIG_FILE"
+    echo "$new_code: $new_command" >>"$CONFIG_FILE"
     show_config
   }
 
   shellwords() {
-    input=( "$@" )
+    input=("$@")
     declare -a output
-    
+
     for word in "${input[@]}"; do
       if [[ $word =~ [[:space:]] ]]; then
-        output+=( "\"$word\"" )
+        output+=("\"$word\"")
       else
-        output+=( "$word" )
+        output+=("$word")
       fi
     done
 
     echo "${output[@]}"
   }
-  
+
   list_codes() {
     need_config
     regex="^([^#:]+):"
@@ -145,7 +145,7 @@ opcode_context() {
       elif [[ $line =~ $break_regex ]]; then
         break
       fi
-    done < "$CONFIG_FILE"
+    done <"$CONFIG_FILE"
     printf "\n"
   }
 
@@ -166,7 +166,7 @@ opcode_context() {
       if [[ $line =~ $comment_regex ]]; then
         printf "  %s\n" "${BASH_REMATCH[1]}"
       fi
-    done < "$CONFIG_FILE"
+    done <"$CONFIG_FILE"
     printf "\n"
   }
 
@@ -191,7 +191,7 @@ opcode_context() {
         elif [[ $line =~ $break_regex ]]; then
           break
         fi
-      done < "$CONFIG_FILE"
+      done <"$CONFIG_FILE"
 
     else
       find_command
@@ -235,17 +235,31 @@ opcode_context() {
 
   opcode_run() {
     case "$1" in
-      "" ) list_or_usage ;;
-      "?"            ) list_codes_extended ;;
-      -l | --list    ) list_codes ;;
-      -s | --show    ) show_config ;;
-      -w | --what    ) shift; CODE=$1; what_command ;;
-      -e | --edit    ) edit_config ;;
-      -a | --add     ) shift; add_command "$@" ;;
-      -h | --help    ) LONG_USAGE=true; usage ;;
-      -v | --version ) echo "$VERSION" ;;
-      --completion ) send_completion ;;
-      * ) CODE=$1; shift; run_command "$@" ;;
+      "") list_or_usage ;;
+      "?") list_codes_extended ;;
+      -l | --list) list_codes ;;
+      -s | --show) show_config ;;
+      -w | --what)
+        shift
+        CODE=$1
+        what_command
+        ;;
+      -e | --edit) edit_config ;;
+      -a | --add)
+        shift
+        add_command "$@"
+        ;;
+      -h | --help)
+        LONG_USAGE=true
+        usage
+        ;;
+      -v | --version) echo "$VERSION" ;;
+      --completion) send_completion ;;
+      *)
+        CODE=$1
+        shift
+        run_command "$@"
+        ;;
     esac
   }
 

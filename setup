@@ -23,7 +23,7 @@ fi
 
 if [[ -n $compdir ]]; then
   echo "=== Installing autocompletions to $compdir"
-  echo "complete -C 'op --completion' op" | $sudo tee "${compdir}/op" > /dev/null
+  echo "complete -C 'op --completion' op" | $sudo tee "${compdir}/op" >/dev/null
 else
   echo "=== Completion script was not installed"
   echo "    To install it manually add this to your startup script:"
@@ -31,7 +31,7 @@ else
 fi
 
 # Verify
-if type op > /dev/null; then
+if type op >/dev/null; then
   echo "=== Done. Type 'op --help' for more info."
 else
   echo "=== Setup failed."

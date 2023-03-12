@@ -32,7 +32,7 @@ place it somewhere in your path, and make it executable.
 ## Usage
 
 When you execute `op`, Opcode will look for `op.conf` in the current 
-directory. See the example [op.conf](op.conf) file for reference.
+directory. See the [example/op.conf](example/op.conf) file for reference.
 
 The syntax of `op.conf` is simple:
 

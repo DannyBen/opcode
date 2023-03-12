@@ -135,7 +135,7 @@ opcode_context() {
   
   list_codes() {
     need_config
-    regex="^([^#][^:]+):"
+    regex="^([^#:]+):"
     break_regex="^[[:space:]]*private[[:space:]]*$"
 
     # shellcheck disable=SC2162
@@ -151,7 +151,7 @@ opcode_context() {
 
   list_codes_extended() {
     need_config
-    regex="^([^#][^:]+):"
+    regex="^([^#:]+):"
     comment_regex="^#\? ?(.*)"
     break_regex="^[[:space:]]*private[[:space:]]*$"
 
@@ -181,7 +181,7 @@ opcode_context() {
 
   what_command() {
     if [[ -z "$CODE" ]]; then
-      regex="^([^#][^:]*):[[:space:]]*(.+)$"
+      regex="^([^#:]*):[[:space:]]*(.+)$"
       break_regex="^[[:space:]]*private[[:space:]]*$"
 
       # shellcheck disable=SC2162

@@ -17,3 +17,8 @@ describe "op ? (with private commands)"
   cd ./fixtures/private
   approve "op ?"
   cd ../../
+
+describe "op ? (with single char commands)"
+  cd ./fixtures/one-char
+  approve "op ?"
+  cd ../../

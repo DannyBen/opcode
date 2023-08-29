@@ -208,6 +208,11 @@ simply add this to your `~/.bashrc`:
 complete -C 'op --completion' op
 ```
 
+## Uninstalling
+
+```shell
+$ curl -Ls get.dannyb.co/opcode/uninstall | bash
+```
 
 ## Contributing / Support
 

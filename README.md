@@ -31,8 +31,9 @@ place it somewhere in your path, and make it executable.
 
 ## Usage
 
-When you execute `op`, Opcode will look for `op.conf` in the current 
-directory. See the [example/op.conf](example/op.conf) file for reference.
+When you execute `op`, Opcode will look for a file named `op.conf` (or opcode)
+in the current directory. See the [example/op.conf](example/op.conf) file
+for reference.
 
 The syntax of `op.conf` is simple:
 
@@ -155,20 +156,6 @@ pull
   perform git pull
 ```
 
-## Partial Command Matching
-
-When running a command, opcode will first try to find an exact match. If none
-is found, it will try to find a command that starts with the code you typed.
-
-In other words, if you have this in your `op.conf` file:
-
-```shell
-server: echo "Running Server" && rackup
-```
-
-You can run it with `op server`, `op s` and anything in between. The first 
-matched command will be executed.
-
 ## Multiline Commands
 
 You may split your command to multiple lines by ending the line with a
@@ -178,7 +165,6 @@ backslash, and indenting the subsequent lines by at least one space:
 up: docker-compose build && \
     docker-compose up web
 ```
-
 
 ## Private Commands
 
@@ -194,9 +180,21 @@ private
 
 clean: rm tmp/*
 build: docker build
-
 ```
 
+## Partial Command Matching
+
+When running a command, opcode will first try to find an exact match. If none
+is found, it will try to find a command that starts with the code you typed.
+
+In other words, if you have this in your `op.conf` file:
+
+```shell
+server: echo "Running Server" && rackup
+```
+
+You can run it with `op server`, `op s` and anything in between. The first 
+matched command will be executed.
 
 ## Bash Completion
 

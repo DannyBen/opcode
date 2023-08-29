@@ -40,6 +40,8 @@ jobs:
       run: ./setup
     - name: Test setup artifacts
       run: test/setup_artifacts
+    - name: Run uninstall
+      run: ./uninstall
 
   macos_setup:
     name: Setup on macOS
@@ -53,4 +55,5 @@ jobs:
       run: ./setup
     - name: Test setup artifacts
       run: test/setup_artifacts
-
+    - name: Run uninstall
+      run: ./uninstall

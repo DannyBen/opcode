@@ -1,6 +1,6 @@
-% op(1) Version 0.6.4 | local command shortcuts
+% op(1) Version $VERSION | local command shortcuts
 % Danny Ben Shitrit \<https://github.com/dannyben\>
-% August 2023
+% $DATE
 
 NAME
 ==================================================
@@ -205,5 +205,4 @@ ISSUE TRACKER
 ==================================================
 
 https://github.com/dannyben/opcode/issues
-
 

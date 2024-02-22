@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Add current directory to path
       run: echo "$PWD" >> $GITHUB_PATH
     - name: Run shellcheck tests
@@ -22,7 +22,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Add current directory to path
       run: echo "$PWD" >> $GITHUB_PATH
     - name: Upgrade the outdated bash
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Run setup
       run: ./setup
     - name: Test setup artifacts
@@ -48,7 +48,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
     - name: Upgrade the outdated bash
       run: brew install bash
     - name: Run setup

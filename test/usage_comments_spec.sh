@@ -1,24 +1,23 @@
 #!/usr/bin/env bash
-# set -e
 source 'approvals.bash'
 
-
 describe "op ?"
-  cd ./fixtures/usage-comments
-  approve "op ?"
-  cd ../../
+  context "when usage comments are defined"
+    cd ./fixtures/usage-comments
+    approve "op ?"
+    cd ../../
 
-describe "op ? (with rogue lines)"
-  cd ./fixtures/rogue-line
-  approve "op ?"
-  cd ../../
+  context "with rogue lines"
+    cd ./fixtures/rogue-line
+    approve "op ?"
+    cd ../../
 
-describe "op ? (with private commands)"
-  cd ./fixtures/private
-  approve "op ?"
-  cd ../../
+  context "with private commands"
+    cd ./fixtures/private
+    approve "op ?"
+    cd ../../
 
-describe "op ? (with single char commands)"
-  cd ./fixtures/one-char
-  approve "op ?"
-  cd ../../
+  context "with single char commands"
+    cd ./fixtures/one-char
+    approve "op ?"
+    cd ../../

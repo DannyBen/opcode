@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# set -e
 source 'approvals.bash'
 
 describe "op --show"
@@ -7,7 +6,7 @@ describe "op --show"
   approve "op --show"
   cd ../../
 
-describe "op --show (with private commands)"
-  cd "./fixtures/private"
-  approve "op --show"
-  cd ../../
+  context "when private commands are defined"
+    cd "./fixtures/private"
+    approve "op --show"
+    cd ../../

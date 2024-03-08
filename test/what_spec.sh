@@ -1,34 +1,34 @@
 #!/usr/bin/env bash
-# set -e   # some non zero exits exiected
 source 'approvals.bash'
 
-describe "op -w <single line command>"
-  cd ./fixtures/basic
-  approve "op -w hello"
-  cd ../../
+describe "op --what"
+  context "without additional arguments"
+    cd ./fixtures/basic
+    approve "op -w"
+    cd ../../
 
-describe "op -w <multiline ommand>"
-  cd ./fixtures/multiline
-  approve "op -w who"
-  cd ../../
+  context "without additional arguments when private commands exist"
+    cd ./fixtures/private
+    approve "op -w"
+    cd ../../
 
-describe "op -w <code that does not exist>"
-  cd ./fixtures/basic
-  approve "op -w nonono" || return 0
-  expect_exit_code 1
-  cd ../../
+  describe "without additional arguments when single char commands exist"
+    cd ./fixtures/one-char
+    approve "op -w"
+    cd ../../
 
-describe "op -w"
-  cd ./fixtures/basic
-  approve "op -w"
-  cd ../../
+  context "with a command that was defined as a single line"
+    cd ./fixtures/basic
+    approve "op -w hello"
+    cd ../../
 
-describe "op -w (with private commands)"
-  cd ./fixtures/private
-  approve "op -w"
-  cd ../../
+  context "with a command that was defined as multiple lines"
+    cd ./fixtures/multiline
+    approve "op -w who"
+    cd ../../
 
-describe "op -w (with single char commands)"
-  cd ./fixtures/one-char
-  approve "op -w"
-  cd ../../
+  context "with a code that does not exist"
+    cd ./fixtures/basic
+    approve "op -w nonono"
+    expect_exit_code 1
+    cd ../../

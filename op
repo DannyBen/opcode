@@ -263,10 +263,14 @@ opcode_context() {
     esac
   }
 
+  # color functions are here even if not used directly to allow using in op.conf
   green() { printf "\e[32m%b\e[0m\n" "$*"; }
+  red() { printf "\e[31m%b\e[0m\n" "$*"; }
+  blue() { printf "\e[34m%b\e[0m\n" "$*"; }
+  bold() { printf "\e[1m%b\e[0m\n" "$*"; }
 
   opcode_initialize() {
-    VERSION="0.6.4"
+    VERSION="0.6.5"
     LONG_USAGE=false
     set_config_file
     set -e

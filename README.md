@@ -3,7 +3,7 @@
 
 # Opcode - Local Command Shortcuts
 
-![Version](https://img.shields.io/badge/version-0.6.4-blue.svg)
+![Version](https://img.shields.io/badge/version-0.6.5-blue.svg)
 ![Test](https://github.com/DannyBen/opcode/workflows/Test/badge.svg)
 
 </div>

@@ -189,7 +189,7 @@ opcode_context() {
 
   list_codes_extended() {
     need_config
-    regex="^([^#:]+):"
+    regex="^([a-zA-Z0-9_-]+):"
     comment_regex="^#\? ?(.*)"
     break_regex="^[[:space:]]*private[[:space:]]*$"
 
@@ -307,7 +307,7 @@ opcode_context() {
   bold() { printf "\e[1m%b\e[0m\n" "$*"; }
 
   opcode_initialize() {
-    VERSION="0.7.0"
+    VERSION="1.0.0"
     LONG_USAGE=false
     set_config_file
     set -e

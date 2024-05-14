@@ -21,3 +21,8 @@ describe "op ?"
     cd ./fixtures/one-char
     approve "op ?"
     cd ../../
+
+  context "with multiline commands"
+    cd ./fixtures/multiline
+    approve "op ?"
+    cd ../../

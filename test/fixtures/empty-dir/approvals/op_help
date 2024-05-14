@@ -1,4 +1,4 @@
-opcode 0.7.0 - local command shortcuts
+opcode 1.0.0 - local command shortcuts
 
 Usage:
   op CODE [ARGS]

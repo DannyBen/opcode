@@ -24,7 +24,12 @@ describe "op --what"
 
   context "with a command that was defined as multiple lines"
     cd ./fixtures/multiline
-    approve "op -w who"
+    approve "op -w multi"
+    cd ../../
+
+  context "with a command that was defined as concatenated line"
+    cd ./fixtures/multiline
+    approve "op -w concat"
     cd ../../
 
   context "with a code that does not exist"

@@ -1,0 +1,1 @@
+echo one : two && echo three && echo four

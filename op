@@ -47,10 +47,14 @@ opcode_context() {
     fi
   }
 
+  abort() {
+    echo "$1" >&2
+    exit "${2:-1}"
+  }
+
   need_config() {
     if [[ ! -f $CONFIG_FILE ]]; then
-      echo "Cannot find config file ($CONFIG_FILE)"
-      exit 1
+      abort "Cannot find config file ($CONFIG_FILE)"
     fi
   }
 
@@ -63,28 +67,63 @@ opcode_context() {
       exit 1
     fi
 
-    exact="^${CODE}:[[:space:]]*(.+)$"
-    fuzzy="^${CODE}[^\:]*:[[:space:]]*(.+)$"
+    COMMAND=$(get_command_from_file "exact")
+    if [[ -z $COMMAND ]]; then
+      COMMAND=$(get_command_from_file "fuzzy")
+    fi
+  }
 
-    # shellcheck disable=SC2162
-    while IFS= read line || [ -n "$line" ]; do
-      if [[ $line =~ $exact ]]; then
-        COMMAND="${BASH_REMATCH[1]}"
-        break
-      fi
-    done <"$CONFIG_FILE"
+  get_command_from_file() {
+    local pattern
 
-    if [[ -n "$COMMAND" ]]; then
-      return
+    if [[ $1 == "fuzzy" ]]; then
+      pattern="^${CODE}[^:]*:[[:space:]]*(.*)$"
+    else
+      pattern="^${CODE}:[[:space:]]*(.*)$"
     fi
 
-    # shellcheck disable=SC2162
-    while IFS= read line || [ -n "$line" ]; do
-      if [[ $line =~ $fuzzy ]]; then
-        COMMAND="${BASH_REMATCH[1]}"
-        break
+    local command=""
+    local collect_command=false
+    local temp_line=""
+
+    while IFS= read -r line || [[ -n $line ]]; do
+      if [[ -n "$temp_line" ]]; then
+        trimmed_line=${line#"${line%%[![:space:]]*}"}
+        temp_line="${temp_line%\\}$trimmed_line"
+        if [[ "$line" =~ \\$ ]]; then
+          continue
+        else
+          line="$temp_line"
+          temp_line=""
+        fi
+      fi
+
+      if [[ "$line" =~ \\$ ]]; then
+        trimmed_line=${line#"${line%%[![:space:]]*}"}
+        temp_line="${temp_line%\\}$trimmed_line"
+        continue
+      fi
+
+      if $collect_command; then
+        if [[ -z "${line}" || ! "${line}" =~ ^[[:space:]]+ ]]; then
+          break
+        fi
+
+        trimmed_line="${line#"${line%%[![:space:]]*}"}"
+        command="${command:+$command && }$trimmed_line"
+      else
+        if [[ $line =~ $pattern ]]; then
+          command="${BASH_REMATCH[1]}"
+          if [[ -n $command ]]; then
+            break
+          fi
+
+          collect_command=true
+        fi
       fi
     done <"$CONFIG_FILE"
+
+    echo "$command"
   }
 
   run_command() {
@@ -97,8 +136,7 @@ opcode_context() {
         eval "$COMMAND" "$@"
       fi
     else
-      echo "Code not found: $CODE"
-      exit 1
+      abort "Code not found: $CODE"
     fi
   }
 
@@ -135,7 +173,7 @@ opcode_context() {
 
   list_codes() {
     need_config
-    regex="^([^#:]+):"
+    regex="^([a-zA-Z0-9_-]+):"
     break_regex="^[[:space:]]*private[[:space:]]*$"
 
     # shellcheck disable=SC2162
@@ -151,7 +189,7 @@ opcode_context() {
 
   list_codes_extended() {
     need_config
-    regex="^([^#:]+):"
+    regex="^([a-zA-Z0-9_-]+):"
     comment_regex="^#\? ?(.*)"
     break_regex="^[[:space:]]*private[[:space:]]*$"
 
@@ -199,8 +237,7 @@ opcode_context() {
         # shellcheck disable=SC2086
         echo $COMMAND
       else
-        echo "Code not found: $CODE"
-        exit 1
+        abort "Code not found: $CODE"
       fi
 
     fi
@@ -270,7 +307,7 @@ opcode_context() {
   bold() { printf "\e[1m%b\e[0m\n" "$*"; }
 
   opcode_initialize() {
-    VERSION="0.6.5"
+    VERSION="1.0.0"
     LONG_USAGE=false
     set_config_file
     set -e

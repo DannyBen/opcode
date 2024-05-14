@@ -56,7 +56,12 @@ describe "op <command>"
 
   context "with multiline config"
     cd ./fixtures/multiline
-    approve "op who"
+    approve "op multi"
+    cd ../../
+
+  context "with concatenated config"
+    cd ./fixtures/multiline
+    approve "op concat"
     cd ../../
 
   context "with a private command"

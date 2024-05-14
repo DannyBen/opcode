@@ -3,7 +3,7 @@
 
 # Opcode - Local Command Shortcuts
 
-![Version](https://img.shields.io/badge/version-0.6.5-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Test](https://github.com/DannyBen/opcode/workflows/Test/badge.svg)
 
 </div>
@@ -158,12 +158,38 @@ pull
 
 ## Multiline Commands
 
-You may split your command to multiple lines by ending the line with a
-backslash, and indenting the subsequent lines by at least one space:
+In order to specify multiple commands for a single code, provide the commands
+indented with one or more spaces immediately under the command code:
 
 ```shell
-up: docker-compose build && \
-    docker-compose up web
+up:
+  docker compose build
+  docker compose up web
+```
+
+Note that these commands will be joined together with `&&` - so the above 
+will be converted to:
+
+```shell
+docker compose build && docker compose up web
+```
+
+## Concatenated Lines
+
+In case you wish to split your command to multiple lines without joining the 
+lines with `&&`, you can add escape the newline by using `\` (backslash):
+
+```shell
+concat: echo who \
+  ordered \
+  this \
+  pizza
+```
+
+Using this syntax will generate this command:
+
+```shell
+echo who ordered this pizza
 ```
 
 ## Private Commands

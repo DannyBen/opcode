@@ -5,6 +5,7 @@ v1.0.0 - 2024-05-14
 ----------------------------------------
 
 - Add support for clean multiline commands (auto-joined with &&) [`9a46eb5`](https://github.com/DannyBen/opcode/commit/9a46eb5)
+- Fix completions setup for mac [`7ecdaba`](https://github.com/DannyBen/opcode/commit/7ecdaba)
 - Compare [`v0.6.5..v1.0.0`](https://github.com/dannyben/opcode/compare/v0.6.5..v1.0.0)
 
 

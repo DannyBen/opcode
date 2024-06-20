@@ -169,16 +169,15 @@ For example, this configuration file:
 ```shell
 # op.conf
 
-## Production Commands
+## Testing Commands
 
-deploy: git commit -am "$1" && git push
-#? perform git commit and push.
-#? usage: op deploy COMMIT_MESSAGE
+test: rspec "$@"
+#? Run tests
 
 ## Git Commands
 
 pull: git pull
-#? perform git pull
+#? Perform git pull
 ```
 
 will result in this output:
@@ -187,16 +186,15 @@ will result in this output:
 $ op ?
 Usage: op COMMAND [ARGS]
 
-Production Commands
+Testing Commands
 
-  deploy
-    perform git commit and push.
-    usage: op deploy COMMIT_MESSAGE
+  test
+    Run tests
 
 Git Commands
 
   pull
-    perform git pull
+    Perform git pull
 ```
 
 

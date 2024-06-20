@@ -294,7 +294,7 @@ opcode_context() {
   cyan() { printf "\e[36m%b\e[0m\n" "$*"; }
 
   opcode_initialize() {
-    VERSION="1.0.0"
+    VERSION="1.1.0"
     set_config_file
     set -e
   }

@@ -24,7 +24,7 @@ running **op CODE**.
 OPTIONS
 ==================================================
 
-## ?
+## ?, --info, -i
 Show all codes and their usage comments (#?)
 
 ## --list, -l
@@ -34,7 +34,7 @@ List command codes
 Show the config file (op.conf)
 
 ## --what, -w [CODE]
-Show the command for a given code or all codes
+Show the command for a given code
 
 ## --edit, -e
 Open the config file for editing
@@ -77,7 +77,7 @@ Any argument provided to the CLI will be forwarded to the command, so with
 this configuration:
 
 ```shell
-commit: git commit -am
+commit: git commit -am "$@"
 ```
 
 You can supply a commit message:
@@ -86,11 +86,27 @@ You can supply a commit message:
 $ op commit "my commit message"
 ```
 
+### Multiline Commands
+
+In order to specify multiple commands for a single code, provide the commands
+indented with one or more spaces immediately under the command code:
+
+```shell
+up:
+  docker compose build
+  docker compose up web
+```
+
+The commands will be joined together using a newline, as they appear in your
+file.
 
 ### Positional Arguments
 
-In some cases, you may want to use the command line arguments in different
-positions in your command. Given this configuration:
+Any excess argument provided when running `op CODE` will be available to you
+as they normally would in a bash script. You can access all of them by using
+`$@`, or the individual arguments at `$1`, `$2` etc.
+
+Given this configuration:
 
 ```shell
 deploy: git commit -am "$1" && git push
@@ -108,12 +124,12 @@ and it will be translated to this command
 git commit -am "version 1.1.1" && git push
 ```
 
-This is made possible due to the fact that any command that contains a **\$**
-character, will not have the command line arguments (**\$\@**) appended to it.
 
 ### Usage Comments
 
-You may add special usage comments in your `op.conf` file. These will be displayed alongside their command code when running `op ?`.  The usage comments must start with `#?` and be placed underneath their associated command. 
+You may add special usage comments in your `op.conf` file. These will be
+displayed alongside their command code when running `op ?`.  The usage comments
+must start with `#?` and be placed underneath their associated command. 
 
 For example, this configuration file:
 
@@ -129,15 +145,56 @@ pull: git pull
 
 will result in this output:
 
+```shell
+$ op ?
+Usage: op COMMAND [ARGS]
+  deploy
+    perform git commit and push.
+    usage: op deploy COMMIT_MESSAGE
+
+  pull
+    perform git pull
+```
+
+### Section Comments
+
+Any comment that starts with `##` will be considered a section header, and will
+be displayed as such when running `op ?`.
+
+For example, this configuration file:
+
+```shell
+# op.conf
+
+## Testing Commands
+
+test: rspec "$@"
+#? Run tests
+
+## Git Commands
+
+pull: git pull
+#? Perform git pull
+```
+
+will result in this output:
+
 ```
 $ op ?
-deploy
-  perform git commit and push.
-  usage: op deploy COMMIT_MESSAGE
+Usage: op COMMAND [ARGS]
 
-pull
-  perform git pull
+Testing Commands
+
+  test
+    Run tests
+
+Git Commands
+
+  pull
+    Perform git pull
 ```
+
+
 
 ### Private Commands
 
@@ -155,43 +212,6 @@ clean: rm tmp/*
 build: docker build
 
 ```
-
-## Multiline Commands
-
-In order to specify multiple commands for a single code, provide the commands
-indented with one or more spaces immediately under the command code:
-
-```shell
-up:
-  docker compose build
-  docker compose up web
-```
-
-Note that these commands will be joined together with **&&** - so the above 
-will be converted to:
-
-```shell
-docker compose build && docker compose up web
-```
-
-## Concatenated Lines
-
-In case you wish to split your command to multiple lines without joining the 
-lines with **&&**, you can add escape the newline by using **\\** (backslash):
-
-```shell
-concat: echo who \
-  ordered \
-  this \
-  pizza
-```
-
-Using this syntax will generate this command:
-
-```shell
-echo who ordered this pizza
-```
-
 
 PARTIAL COMMAND MATCHING
 ==================================================

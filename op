@@ -36,7 +36,7 @@ opcode_context() {
 
     printf "  op -w, --what [CODE]\n"
     if [[ $long_usage == 1 ]]; then
-      printf "    Show the command for a given code or all codes\n\n"
+      printf "    Show the command for a given code\n\n"
     fi
 
     printf "  op -e, --edit\n"

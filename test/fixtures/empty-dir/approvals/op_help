@@ -15,7 +15,7 @@ Usage:
     Show the config file (op.conf)
 
   op -w, --what [CODE]
-    Show the command for a given code or all codes
+    Show the command for a given code
 
   op -e, --edit
     Open the config file for editing

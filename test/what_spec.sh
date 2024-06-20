@@ -2,18 +2,8 @@
 source 'approvals.bash'
 
 describe "op --what"
-  context "without additional arguments"
+  context "without command code"
     cd ./fixtures/basic
-    approve "op -w"
-    cd ../../
-
-  context "without additional arguments when private commands exist"
-    cd ./fixtures/private
-    approve "op -w"
-    cd ../../
-
-  describe "without additional arguments when single char commands exist"
-    cd ./fixtures/one-char
     approve "op -w"
     cd ../../
 

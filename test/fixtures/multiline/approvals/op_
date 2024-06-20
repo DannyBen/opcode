@@ -1,7 +1,7 @@
 Usage: op COMMAND [ARGS]
   [1mone[0m
   [1mmulti[0m
-    these lines will be joined with &&
+    these lines will be joined with a newline
 
   [1mconcat[0m
     these lines will be joined without any glue

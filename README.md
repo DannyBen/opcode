@@ -130,7 +130,9 @@ character, will not have the command line arguments (`$@`) appended to it.
 
 ## Usage Comments
 
-You may add special usage comments in your `op.conf` file. These will be displayed alongside their command code when running `op ?`.  The usage comments must start with `#?` and be placed underneath their associated command. 
+You may add special usage comments in your `op.conf` file. These will be
+displayed alongside their command code when running `op ?`.  The usage comments
+must start with `#?` and be placed underneath their associated command. 
 
 For example, this configuration file:
 
@@ -148,13 +150,55 @@ will result in this output:
 
 ```
 $ op ?
-deploy
-  perform git commit and push.
-  usage: op deploy COMMIT_MESSAGE
+Usage: op COMMAND [ARGS]
+  deploy
+    perform git commit and push.
+    usage: op deploy COMMIT_MESSAGE
 
-pull
-  perform git pull
+  pull
+    perform git pull
 ```
+
+## Section Comments
+
+Any comment that starts with `##` will be considered a section header, and will
+be displayed as such when running `op ?`.
+
+For example, this configuration file:
+
+```shell
+# op.conf
+
+## Production Commands
+
+deploy: git commit -am "$1" && git push
+#? perform git commit and push.
+#? usage: op deploy COMMIT_MESSAGE
+
+## Git Commands
+
+pull: git pull
+#? perform git pull
+```
+
+will result in this output:
+
+```
+$ op ?
+Usage: op COMMAND [ARGS]
+
+Production Commands
+
+  deploy
+    perform git commit and push.
+    usage: op deploy COMMIT_MESSAGE
+
+Git Commands
+
+  pull
+    perform git pull
+```
+
 
 ## Multiline Commands
 

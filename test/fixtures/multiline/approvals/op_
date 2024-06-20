@@ -1,13 +1,12 @@
+Usage: op COMMAND [ARGS]
+  [1mone[0m
+  [1mmulti[0m
+    these lines will be joined with &&
 
-[32mone[0m
+  [1mconcat[0m
+    these lines will be joined without any glue
 
-[32mmulti[0m
-  these lines will be joined with &&
+  [1madvanced-multi[0m
+    this will abort unless it gets an argument
 
-[32mconcat[0m
-  these lines will be joined without any glue
-
-[32madvanced-multi[0m
-  this will abort unless it gets an argument
-
-[32mtwo[0m
+  [1mtwo[0m

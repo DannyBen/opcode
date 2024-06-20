@@ -1,9 +1,16 @@
+Usage: op COMMAND [ARGS]
 
-[32mdeploy[0m
-  Deploy to production
-  Usage: deploy APPNAME
+[32mHeader 1[0m
 
-[32mterminate[0m
-  Terminate everything
+  [1mdeploy[0m
+    Deploy to production
+    Usage: deploy APPNAME
 
-[32mhidden[0m
+[32mHeader 2[0m
+
+  [1mterminate[0m
+    Terminate everything
+
+  [1mhelpless[0m
+  [1mhelpful[0m
+    Usage text

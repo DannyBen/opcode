@@ -1,6 +1,6 @@
+Usage: op COMMAND [ARGS]
+  [1m1[0m
+    number works
 
-[32m1[0m
-  number works
-
-[32ma[0m
-  single letter works
+  [1ma[0m
+    single letter works

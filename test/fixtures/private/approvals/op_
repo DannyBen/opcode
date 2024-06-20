@@ -1,6 +1,6 @@
+Usage: op COMMAND [ARGS]
+  [1mone[0m
+    one
 
-[32mone[0m
-  one
-
-[32mtwo[0m
-  two and three
+  [1mtwo[0m
+    two and three

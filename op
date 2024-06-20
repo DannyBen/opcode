@@ -202,20 +202,35 @@ opcode_context() {
 
   list_codes_extended() {
     need_config
-    regex="^([a-zA-Z0-9_-]+):"
+    code_regex="^([a-zA-Z0-9_-]+):"
     comment_regex="^#\? ?(.*)"
     break_regex="^[[:space:]]*private[[:space:]]*$"
+    header_regex="^## ?(.*)"
+    comment_found=0
+
+    echo "Usage: op COMMAND [ARGS]"
 
     # shellcheck disable=SC2162
     while IFS= read line || [ -n "$line" ]; do
       if [[ $line =~ $break_regex ]]; then
         break
       fi
-      if [[ $line =~ $regex ]]; then
-        printf "\n%s\n" "$(green "${BASH_REMATCH[1]}")"
-      fi
-      if [[ $line =~ $comment_regex ]]; then
-        printf "  %s\n" "${BASH_REMATCH[1]}"
+
+      if [[ $line =~ $header_regex ]]; then
+        printf "\n%s\n\n" "$(green "${BASH_REMATCH[1]}")"
+        comment_found=0
+
+      elif [[ $line =~ $code_regex ]]; then
+        if [[ $comment_found == 1 ]]; then
+          printf "\n"
+          comment_found=0
+        fi
+        printf "  %s\n" "$(bold "${BASH_REMATCH[1]}")"
+
+      elif [[ $line =~ $comment_regex ]]; then
+        comment_found=1
+        printf "    %s\n" "${BASH_REMATCH[1]}"
+
       fi
     done <"$CONFIG_FILE"
     printf "\n"

@@ -1,6 +1,17 @@
 Changelog
 ========================================
 
+v1.1.0 - 2024-06-20
+----------------------------------------
+
+- Add `-i` and `--info` as an alternative to `op ?` [`ca13b01`](https://github.com/DannyBen/opcode/commit/ca13b01)
+- Add support for usage section comments (`##`) [`2f5f597`](https://github.com/DannyBen/opcode/commit/2f5f597)
+- Add more color functions (can be used in op.conf) [`5b95d74`](https://github.com/DannyBen/opcode/commit/5b95d74)
+- [BREAKING] Multiline commands are now joined with a newline + arguments (`$@`) are no longer attached automatically to the command [`fcfadca`](https://github.com/DannyBen/opcode/commit/fcfadca)
+- Update example file [`fb89a44`](https://github.com/DannyBen/opcode/commit/fb89a44)
+- Compare [`v1.0.0..v1.1.0`](https://github.com/dannyben/opcode/compare/v1.0.0..v1.1.0)
+
+
 v1.0.0 - 2024-05-14
 ----------------------------------------
 

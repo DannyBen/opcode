@@ -4,45 +4,58 @@
 # ---------------------------------------------------------------
 opcode_context() {
   usage() {
-    if $LONG_USAGE; then
+    long_usage=0
+
+    [[ "$1" == "long" ]] && long_usage=1
+
+    if [[ $long_usage == 1 ]]; then
       printf "opcode %s - local command shortcuts\n\n" "$VERSION"
     fi
+
     printf "Usage:\n"
     printf "  op CODE [ARGS]\n"
-    if $LONG_USAGE; then
+    if [[ $long_usage == 1 ]]; then
       printf "    Execute a command from the config file (%s)\n" "$CONFIG_FILE"
-      printf "    Arguments will be passed to the command\n\n"
+      printf "    Arguments will be passed to the command (use with \"\$@\")\n\n"
     fi
-    printf "  op ?\n"
-    if $LONG_USAGE; then
+
+    printf "  op ?, -i, --info\n"
+    if [[ $long_usage == 1 ]]; then
       printf "    Show all codes and their usage comments (#?)\n\n"
     fi
+
     printf "  op -l, --list\n"
-    if $LONG_USAGE; then
+    if [[ $long_usage == 1 ]]; then
       printf "    List command codes\n\n"
     fi
+
     printf "  op -s, --show\n"
-    if $LONG_USAGE; then
+    if [[ $long_usage == 1 ]]; then
       printf "    Show the config file (%s)\n\n" "$CONFIG_FILE"
     fi
+
     printf "  op -w, --what [CODE]\n"
-    if $LONG_USAGE; then
+    if [[ $long_usage == 1 ]]; then
       printf "    Show the command for a given code or all codes\n\n"
     fi
+
     printf "  op -e, --edit\n"
-    if $LONG_USAGE; then
+    if [[ $long_usage == 1 ]]; then
       printf "    Open the config file for editing\n\n"
     fi
+
     printf "  op -a, --add CODE COMMAND...\n"
-    if $LONG_USAGE; then
+    if [[ $long_usage == 1 ]]; then
       printf "    Append a command to the config file\n\n"
     fi
+
     printf "  op -h, --help\n"
-    if $LONG_USAGE; then
+    if [[ $long_usage == 1 ]]; then
       printf "    Show this message\n\n"
     fi
+
     printf "  op -v, --version\n"
-    if $LONG_USAGE; then
+    if [[ $long_usage == 1 ]]; then
       printf "    Show version number\n\n"
     fi
   }
@@ -273,7 +286,7 @@ opcode_context() {
   opcode_run() {
     case "$1" in
       "") list_or_usage ;;
-      "?") list_codes_extended ;;
+      \? | -i | --info) list_codes_extended ;;
       -l | --list) list_codes ;;
       -s | --show) show_config ;;
       -w | --what)
@@ -286,10 +299,7 @@ opcode_context() {
         shift
         add_command "$@"
         ;;
-      -h | --help)
-        LONG_USAGE=true
-        usage
-        ;;
+      -h | --help) usage 'long' ;;
       -v | --version) echo "$VERSION" ;;
       --completion) send_completion ;;
       *)
@@ -308,7 +318,6 @@ opcode_context() {
 
   opcode_initialize() {
     VERSION="1.0.0"
-    LONG_USAGE=false
     set_config_file
     set -e
   }

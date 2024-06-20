@@ -3,9 +3,9 @@ opcode 1.0.0 - local command shortcuts
 Usage:
   op CODE [ARGS]
     Execute a command from the config file (op.conf)
-    Arguments will be passed to the command
+    Arguments will be passed to the command (use with "$@")
 
-  op ?
+  op ?, -i, --info
     Show all codes and their usage comments (#?)
 
   op -l, --list

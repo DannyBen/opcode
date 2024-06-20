@@ -76,9 +76,9 @@ $ op --help
 Usage:
   op CODE [ARGS]
     Execute a command from the config file (op.conf)
-    Arguments will be passed to the command
+    Arguments will be passed to the command (use with "$@")
 
-  op ?
+  op ?, -i, --info
     Show all codes and their usage comments (#?)
 
   op -l, --list
@@ -87,8 +87,8 @@ Usage:
   op -s, --show
     Show the config file (op.conf)
 
-  op -w, --what CODE
-    Show the command for a given code
+  op -w, --what [CODE]
+    Show the command for a given code or all codes
 
   op -e, --edit
     Open the config file for editing

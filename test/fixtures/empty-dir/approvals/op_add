@@ -1,7 +1,7 @@
 Invalid operation
 Usage:
   op CODE [ARGS]
-  op ?
+  op ?, -i, --info
   op -l, --list
   op -s, --show
   op -w, --what [CODE]

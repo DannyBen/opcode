@@ -166,7 +166,7 @@ opcode_context() {
 
   list_codes() {
     need_config
-    regex="^([a-zA-Z0-9_-]+):"
+    regex="^([a-zA-Z0-9_.-]+):"
     break_regex="^[[:space:]]*private[[:space:]]*$"
 
     # shellcheck disable=SC2162
@@ -182,13 +182,13 @@ opcode_context() {
 
   list_codes_extended() {
     need_config
-    code_regex="^([a-zA-Z0-9_-]+):"
+    code_regex="^([a-zA-Z0-9_.-]+):"
     comment_regex="^#\? ?(.*)"
     break_regex="^[[:space:]]*private[[:space:]]*$"
     header_regex="^## ?(.*)"
     comment_found=0
 
-    echo "Usage: op COMMAND [ARGS]"
+    echo "Usage: op CODE [ARGS]"
 
     # shellcheck disable=SC2162
     while IFS= read line || [[ -n "$line" ]]; do

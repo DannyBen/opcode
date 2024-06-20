@@ -1,2 +1,1 @@
-hello: echo world
-who: whoami
+Usage: op --what CODE

@@ -1,1 +1,3 @@
-echo one : two && echo three && echo four
+echo one : two
+echo three
+echo four

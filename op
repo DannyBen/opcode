@@ -73,84 +73,64 @@ opcode_context() {
 
   find_command() {
     need_config
+    code="$1"
 
-    if [[ -z $CODE ]]; then
-      echo "Invalid operation"
-      usage
-      exit 1
+    result=$(get_script "$code" "exact")
+    if [[ -z $result ]]; then
+      result=$(get_script "$code" "fuzzy")
     fi
 
-    COMMAND=$(get_command_from_file "exact")
-    if [[ -z $COMMAND ]]; then
-      COMMAND=$(get_command_from_file "fuzzy")
-    fi
+    echo "$result"
   }
 
-  get_command_from_file() {
-    local pattern
+  get_script() {
+    local code="$1"
+    local mode="$2"
+    local -a script=()
+    local strict_pattern="^${code}:[[:space:]]*(.*)$"
+    local fuzzy_pattern="^${code}[^:]*:[[:space:]]*(.*)$"
+    local found=0
 
-    if [[ $1 == "fuzzy" ]]; then
-      pattern="^${CODE}[^:]*:[[:space:]]*(.*)$"
+    if [[ $mode == "fuzzy" ]]; then
+      pattern="$fuzzy_pattern"
     else
-      pattern="^${CODE}:[[:space:]]*(.*)$"
+      pattern="$strict_pattern"
     fi
 
-    local command=""
-    local collect_command=false
-    local temp_line=""
-
     while IFS= read -r line || [[ -n $line ]]; do
-      if [[ -n "$temp_line" ]]; then
-        trimmed_line=${line#"${line%%[![:space:]]*}"}
-        temp_line="${temp_line%\\}$trimmed_line"
-        if [[ "$line" =~ \\$ ]]; then
-          continue
-        else
-          line="$temp_line"
-          temp_line=""
-        fi
-      fi
-
-      if [[ "$line" =~ \\$ ]]; then
-        trimmed_line=${line#"${line%%[![:space:]]*}"}
-        temp_line="${temp_line%\\}$trimmed_line"
-        continue
-      fi
-
-      if $collect_command; then
-        if [[ -z "${line}" || ! "${line}" =~ ^[[:space:]]+ ]]; then
+      if [[ $line =~ $pattern ]]; then
+        if [[ $found == 1 ]]; then
           break
         fi
 
-        trimmed_line="${line#"${line%%[![:space:]]*}"}"
-        command="${command:+$command && }$trimmed_line"
-      else
-        if [[ $line =~ $pattern ]]; then
-          command="${BASH_REMATCH[1]}"
-          if [[ -n $command ]]; then
-            break
-          fi
-
-          collect_command=true
+        found=1
+        line="${BASH_REMATCH[1]}"
+        if [[ -n $line ]]; then
+          script+=("$line")
+        fi
+      elif [[ $found == 1 ]]; then
+        if [[ $line =~ ^[[:space:]]+(.+)$ ]]; then
+          script+=("${BASH_REMATCH[1]}")
+        else
+          break
         fi
       fi
     done <"$CONFIG_FILE"
 
-    echo "$command"
+    printf "%s\n" "${script[@]}"
   }
 
   run_command() {
-    find_command
-    if [[ -n $COMMAND ]]; then
-      if [[ $COMMAND =~ \$ ]]; then
-        eval "$COMMAND"
-      else
-        # shellcheck disable=SC2294
-        eval "$COMMAND" "$@"
-      fi
-    else
-      abort "Code not found: $CODE"
+    local command
+    local code="$1"
+    shift # so that $@ is properly available to the user script
+
+    command=$(find_command "$code")
+    if [[ -z $command ]]; then
+      abort "Code not found: $code"
     fi
+
+    eval "$command"
   }
 
   add_command() {
@@ -190,7 +170,7 @@ opcode_context() {
     break_regex="^[[:space:]]*private[[:space:]]*$"
 
     # shellcheck disable=SC2162
-    while IFS= read line || [ -n "$line" ]; do
+    while IFS= read line || [[ -n "$line" ]]; do
       if [[ $line =~ $regex ]]; then
         printf "%s   " "${BASH_REMATCH[1]}"
       elif [[ $line =~ $break_regex ]]; then
@@ -211,7 +191,7 @@ opcode_context() {
     echo "Usage: op COMMAND [ARGS]"
 
     # shellcheck disable=SC2162
-    while IFS= read line || [ -n "$line" ]; do
+    while IFS= read line || [[ -n "$line" ]]; do
       if [[ $line =~ $break_regex ]]; then
         break
       fi
@@ -246,28 +226,18 @@ opcode_context() {
   }
 
   what_command() {
-    if [[ -z "$CODE" ]]; then
-      regex="^([^#:]*):[[:space:]]*(.+)$"
-      break_regex="^[[:space:]]*private[[:space:]]*$"
+    local code="$1"
+    local script
 
-      # shellcheck disable=SC2162
-      while IFS= read line || [ -n "$line" ]; do
-        if [[ $line =~ $regex ]]; then
-          printf "%s: %s\n" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
-        elif [[ $line =~ $break_regex ]]; then
-          break
-        fi
-      done <"$CONFIG_FILE"
+    if [[ -z $code ]]; then
+      abort 'Usage: op --what CODE'
+    fi
 
+    script=$(get_script "$code")
+    if [[ -n $script ]]; then
+      echo "$script"
     else
-      find_command
-      if [[ -n $COMMAND ]]; then
-        # shellcheck disable=SC2086
-        echo $COMMAND
-      else
-        abort "Code not found: $CODE"
-      fi
-
+      abort "Code not found: $code"
     fi
   }
 
@@ -304,32 +274,24 @@ opcode_context() {
       \? | -i | --info) list_codes_extended ;;
       -l | --list) list_codes ;;
       -s | --show) show_config ;;
-      -w | --what)
-        shift
-        CODE=$1
-        what_command
-        ;;
+      -w | --what) what_command "$2" ;;
       -e | --edit) edit_config ;;
-      -a | --add)
-        shift
-        add_command "$@"
-        ;;
+      -a | --add) add_command "${@:2}" ;;
       -h | --help) usage 'long' ;;
       -v | --version) echo "$VERSION" ;;
       --completion) send_completion ;;
-      *)
-        CODE=$1
-        shift
-        run_command "$@"
-        ;;
+      *) run_command "$@" ;;
     esac
   }
 
   # color functions are here even if not used directly to allow using in op.conf
-  green() { printf "\e[32m%b\e[0m\n" "$*"; }
-  red() { printf "\e[31m%b\e[0m\n" "$*"; }
-  blue() { printf "\e[34m%b\e[0m\n" "$*"; }
   bold() { printf "\e[1m%b\e[0m\n" "$*"; }
+  red() { printf "\e[31m%b\e[0m\n" "$*"; }
+  green() { printf "\e[32m%b\e[0m\n" "$*"; }
+  yellow() { printf "\e[33m%b\e[0m\n" "$*"; }
+  blue() { printf "\e[34m%b\e[0m\n" "$*"; }
+  magenta() { printf "\e[35m%b\e[0m\n" "$*"; }
+  cyan() { printf "\e[36m%b\e[0m\n" "$*"; }
 
   opcode_initialize() {
     VERSION="1.0.0"

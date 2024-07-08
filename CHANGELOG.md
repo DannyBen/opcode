@@ -1,6 +1,13 @@
 Changelog
 ========================================
 
+v1.1.1 - 2024-07-08
+----------------------------------------
+
+- Show codes in columns [`82796b2`](https://github.com/DannyBen/opcode/commit/82796b2)
+- Compare [`v1.1.0..v1.1.1`](https://github.com/dannyben/opcode/compare/v1.1.0..v1.1.1)
+
+
 v1.1.0 - 2024-06-20
 ----------------------------------------
 

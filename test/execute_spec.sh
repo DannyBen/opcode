@@ -7,7 +7,7 @@ describe "op <command>"
     approve "op hello"
     cd ../../
 
-  context "when the approved command exits wiuth non zero"
+  context "when the approved command exits with non zero"
     it "continues execution and stores exit code"
       cd ./fixtures/basic
       approve "op nocommand"

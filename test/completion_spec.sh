@@ -15,15 +15,15 @@ describe "op --completion"
 
   context "with a single match"
     export COMP_LINE="op c"
-    approve "op --completion" "op_compoletion_op_c"
+    approve "op --completion" "op_completion_op_c"
 
   context "with multiple matches"
     export COMP_LINE="op b"
-    approve "op --completion" "op_compoletion_op_b"
+    approve "op --completion" "op_completion_op_b"
 
   context "with with -w"
     export COMP_LINE="op -w b"
-    approve "op --completion" "op_compoletion_op_b"
+    approve "op --completion" "op_completion_op_b"
     # note: same approval file as previous test, expecting same output
 
   context "in a folder without op.conf"

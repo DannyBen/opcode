@@ -1,14 +1,8 @@
-<div align='center'>
-<img src='opcode-logo.svg' width=300>
+<div align='center'><img src='opcode-logo.svg' width=300></div>
 
 # Opcode - Local Command Shortcuts
 
-![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
-![Test](https://github.com/DannyBen/opcode/workflows/Test/badge.svg)
-
-</div>
-
----
+![repocard](repocard.svg)
 
 Opcode lets you define a simple configuration file in any directory.
 This file includes shortcuts to other commands.

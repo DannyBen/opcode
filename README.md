@@ -2,7 +2,7 @@
 
 # Opcode - Local Command Shortcuts
 
-![repocard](repocard.svg)
+![repocard](https://repocard.dannyben.com/svg/opcode.svg)
 
 Opcode lets you define a simple configuration file in any directory.
 This file includes shortcuts to other commands.

@@ -10,15 +10,24 @@ check_file() {
 }
 
 get_comp_dir() {
-  if [[ -d "/usr/share/bash-completion/completions" ]]; then
-    echo "/usr/share/bash-completion/completions"
-  elif [[ -d "/usr/local/etc/bash_completion.d" ]]; then
-    echo "/usr/local/etc/bash_completion.d"
-  elif command -v brew &> /dev/null && [[ -d "$(brew --prefix)/etc/bash_completion.d" ]]; then
-    echo "$(brew --prefix)/etc/bash_completion.d"
-  else
-    echo ''
-  fi
+  local candidates=(
+    "/usr/local/share/bash-completion/completions"
+    "/usr/share/bash-completion/completions"
+    "/usr/local/etc/bash_completion.d"
+    "/etc/bash_completion.d"
+    "/opt/homebrew/share/bash-completion/completions"
+    "/opt/homebrew/etc/bash_completion.d"
+  )
+
+  local dir
+  for dir in "${candidates[@]}"; do
+    if [[ -d "$dir" ]]; then
+      echo "$dir"
+      return
+    fi
+  done
+
+  echo ''
 }
 
 # Check that 'op' is in its place

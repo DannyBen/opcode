@@ -26,4 +26,3 @@ ssi install bin https://github.com/DannyBen/opcode/releases/latest/download/op
 ssi install man https://raw.githubusercontent.com/DannyBen/opcode/master/doc/op.1
 printf "complete -C 'op --completion' op\n" | ssi install completion --shell bash --name op -
 ssi log info "op --version : $(op --version)"
-

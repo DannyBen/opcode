@@ -1,0 +1,46 @@
+Opcode config syntax
+
+Each command is CODE: SCRIPT
+
+  test: npm test
+  check: shellcheck op setup
+
+Run with:
+
+  op test
+  op check
+
+Arguments passed after the code are available to the script as "$@", "$1", "$2", ...
+
+  greet: echo "hello $1"
+  commit: git commit -am "$@"
+
+Multiline commands are indented below the code:
+
+  up:
+    docker compose build
+    docker compose up web
+
+Usage comments appear in `op ?`. Put them after their command.
+Repeat #? lines for multiline comments:
+
+  test: npm test
+  #? Run tests
+  #? Use before opening a pull request
+
+Headers appear in `op ?`:
+
+  ## Testing
+
+Private commands are hidden from `op ?` and `op --list`
+after a line containing:
+
+  private
+
+Command codes may contain letters, digits, underscores, dots, and dashes.
+
+Config files:
+
+  op uses: opcode, op.conf
+  renamed executable uses: <name>.op.conf, <name>.conf
+  explicit config: op -c FILE CODE

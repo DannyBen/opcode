@@ -54,6 +54,11 @@ opcode_context() {
       printf "    Use a specific config file\n\n"
     fi
 
+    printf "  %s --syntax\n" "$PROGRAM_NAME"
+    if [[ $long_usage == 1 ]]; then
+      printf "    Show config file syntax\n\n"
+    fi
+
     printf "  %s -h, --help\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
       printf "    Show this message\n\n"
@@ -241,6 +246,57 @@ opcode_context() {
     cat "$CONFIG_FILE"
   }
 
+  show_syntax() {
+    cat <<EOF
+Opcode config syntax
+
+Each command is CODE: SCRIPT
+
+  test: npm test
+  check: shellcheck op setup
+
+Run with:
+
+  $PROGRAM_NAME test
+  $PROGRAM_NAME check
+
+Arguments passed after the code are available to the script as "\$@", "\$1", "\$2", ...
+
+  greet: echo "hello \$1"
+  commit: git commit -am "\$@"
+
+Multiline commands are indented below the code:
+
+  up:
+    docker compose build
+    docker compose up web
+
+Usage comments appear in \`$PROGRAM_NAME ?\`. Put them after their command.
+Repeat #? lines for multiline comments:
+
+  test: npm test
+  #? Run tests
+  #? Use before opening a pull request
+
+Headers appear in \`$PROGRAM_NAME ?\`:
+
+  ## Testing
+
+Private commands are hidden from \`$PROGRAM_NAME ?\` and \`$PROGRAM_NAME --list\`
+after a line containing:
+
+  private
+
+Command codes may contain letters, digits, underscores, dots, and dashes.
+
+Config files:
+
+  op uses: opcode, op.conf
+  renamed executable uses: <name>.op.conf, <name>.conf
+  explicit config: $PROGRAM_NAME -c FILE CODE
+EOF
+  }
+
   what_command() {
     local code="$1"
     local script
@@ -324,6 +380,7 @@ opcode_context() {
       -a | --add) add_command "${@:2}" ;;
       -h | --help) usage 'long' ;;
       -v | --version) echo "$VERSION" ;;
+      --syntax) show_syntax ;;
       --completion) send_completion ;;
       *) run_command "$@" ;;
     esac

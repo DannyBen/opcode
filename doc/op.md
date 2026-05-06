@@ -42,6 +42,9 @@ Open the config file for editing
 ## --add, -a CODE COMMAND...
 Append a command to the config file
 
+## --config, -c FILE CODE [ARGS]
+Use a specific config file
+
 ## --help, -h
 Show help message
 
@@ -51,7 +54,7 @@ Show version number
 OPCODE FILE
 ==================================================
 
-Running **op** will look for a file named **op.conf** or **opcode** in the
+Running **op** will look for a file named **opcode** or **op.conf** in the
 working directory.
 
 The syntax of this file is simple - each line should contain a code and the
@@ -85,6 +88,40 @@ You can supply a commit message:
 ```shell
 $ op commit "my commit message"
 ```
+
+### Config Selection
+
+Use `-c, --config` or `OPCODE_CONFIG` to run commands from a specific config
+file:
+
+```shell
+$ op -c agent.op.conf check
+$ op --config agent.op.conf check
+$ OPCODE_CONFIG=agent.op.conf op check
+```
+
+The `-c, --config` flag must appear before the command code. Any `-c` that
+appears after the command code is passed through to the command as an argument.
+The flag has precedence over `OPCODE_CONFIG`.
+
+You can also create another local command namespace by symlinking `op` under a
+different name:
+
+```shell
+$ cd /usr/local/bin  # or wherever op is installed
+$ sudo ln -s op agent
+$ agent check
+```
+
+A renamed executable uses its own config files:
+
+```text
+agent -> agent.op.conf, agent.conf
+```
+
+The `.op.conf` file is preferred when both files exist. A renamed executable
+does not fall back to `opcode` or `op.conf`; this keeps separately named
+catalogs from accidentally running commands from the main `op` namespace.
 
 ### Multiline Commands
 
@@ -242,6 +279,12 @@ simply add this to your `~/.bashrc`:
 complete -C 'op --completion' op
 ```
 
+For a renamed executable, install completion with the same name:
+
+```shell
+complete -C 'agent --completion' agent
+```
+
 SOURCE CODE
 ==================================================
 
@@ -251,4 +294,3 @@ ISSUE TRACKER
 ==================================================
 
 https://github.com/dannyben/opcode/issues
-

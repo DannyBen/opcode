@@ -23,6 +23,9 @@ Usage:
   op -a, --add CODE COMMAND...
     Append a command to the config file
 
+  op -c, --config FILE CODE [ARGS]
+    Use a specific config file
+
   op -h, --help
     Show this message
 

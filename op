@@ -13,48 +13,53 @@ opcode_context() {
     fi
 
     printf "Usage:\n"
-    printf "  op CODE [ARGS]\n"
+    printf "  %s CODE [ARGS]\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
       printf "    Execute a command from the config file (%s)\n" "$CONFIG_FILE"
       printf "    Arguments will be passed to the command (use with \"\$@\")\n\n"
     fi
 
-    printf "  op ?, -i, --info\n"
+    printf "  %s ?, -i, --info\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
       printf "    Show all codes and their usage comments (#?)\n\n"
     fi
 
-    printf "  op -l, --list\n"
+    printf "  %s -l, --list\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
       printf "    List command codes\n\n"
     fi
 
-    printf "  op -s, --show\n"
+    printf "  %s -s, --show\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
       printf "    Show the config file (%s)\n\n" "$CONFIG_FILE"
     fi
 
-    printf "  op -w, --what [CODE]\n"
+    printf "  %s -w, --what [CODE]\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
       printf "    Show the command for a given code\n\n"
     fi
 
-    printf "  op -e, --edit\n"
+    printf "  %s -e, --edit\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
       printf "    Open the config file for editing\n\n"
     fi
 
-    printf "  op -a, --add CODE COMMAND...\n"
+    printf "  %s -a, --add CODE COMMAND...\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
       printf "    Append a command to the config file\n\n"
     fi
 
-    printf "  op -h, --help\n"
+    printf "  %s -c, --config FILE CODE [ARGS]\n" "$PROGRAM_NAME"
+    if [[ $long_usage == 1 ]]; then
+      printf "    Use a specific config file\n\n"
+    fi
+
+    printf "  %s -h, --help\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
       printf "    Show this message\n\n"
     fi
 
-    printf "  op -v, --version\n"
+    printf "  %s -v, --version\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
       printf "    Show version number\n\n"
     fi
@@ -199,7 +204,7 @@ opcode_context() {
     header_regex="^## ?(.*)"
     comment_found=0
 
-    echo "Usage: op CODE [ARGS]"
+    echo "Usage: $PROGRAM_NAME CODE [ARGS]"
 
     # shellcheck disable=SC2162
     while IFS= read line || [[ -n "$line" ]]; do
@@ -241,7 +246,7 @@ opcode_context() {
     local script
 
     if [[ -z $code ]]; then
-      abort 'Usage: op --what CODE'
+      abort "Usage: $PROGRAM_NAME --what CODE"
     fi
 
     script=$(get_script "$code")
@@ -253,10 +258,20 @@ opcode_context() {
   }
 
   set_config_file() {
-    if [[ -f "opcode" ]]; then
+    if [[ -n ${CONFIG_FILE_OVERRIDE:-} ]]; then
+      CONFIG_FILE="$CONFIG_FILE_OVERRIDE"
+    elif [[ -n ${OPCODE_CONFIG:-} ]]; then
+      CONFIG_FILE="$OPCODE_CONFIG"
+    elif [[ $PROGRAM_NAME == "op" && -f "opcode" ]]; then
       CONFIG_FILE="opcode"
-    else
+    elif [[ $PROGRAM_NAME == "op" ]]; then
       CONFIG_FILE="op.conf"
+    elif [[ -f "$PROGRAM_NAME.op.conf" ]]; then
+      CONFIG_FILE="$PROGRAM_NAME.op.conf"
+    elif [[ -f "$PROGRAM_NAME.conf" ]]; then
+      CONFIG_FILE="$PROGRAM_NAME.conf"
+    else
+      CONFIG_FILE="$PROGRAM_NAME.op.conf"
     fi
   }
 
@@ -273,13 +288,32 @@ opcode_context() {
     # shellcheck disable=SC2086
     set $COMP_LINE
     if [[ $# -eq 1 ]]; then
-      compgen -W "$(op --list)"
+      compgen -W "$(list_codes)"
     else
-      compgen -W "$(op --list)" "${@: -1}"
+      compgen -W "$(list_codes)" "${@: -1}"
     fi
   }
 
+  parse_config_option() {
+    CONFIG_FILE_OVERRIDE=""
+
+    if [[ $1 == "-c" || $1 == "--config" ]]; then
+      if [[ -z ${2:-} ]]; then
+        abort "Missing config file for $1"
+      fi
+
+      CONFIG_FILE_OVERRIDE="$2"
+      shift 2
+    fi
+
+    OPCODE_ARGS=("$@")
+  }
+
   opcode_run() {
+    parse_config_option "$@"
+    set_config_file
+    set -- "${OPCODE_ARGS[@]}"
+
     case "$1" in
       "") list_or_usage ;;
       \? | -i | --info) list_codes_extended ;;
@@ -306,7 +340,7 @@ opcode_context() {
 
   opcode_initialize() {
     VERSION="1.1.1"
-    set_config_file
+    PROGRAM_NAME=$(basename "$0")
     set -e
   }
 

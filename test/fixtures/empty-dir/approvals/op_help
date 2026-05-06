@@ -26,6 +26,9 @@ Usage:
   op -c, --config FILE CODE [ARGS]
     Use a specific config file
 
+  op --syntax
+    Show config file syntax
+
   op -h, --help
     Show this message
 

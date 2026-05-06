@@ -45,6 +45,9 @@ Append a command to the config file
 ## --config, -c FILE CODE [ARGS]
 Use a specific config file
 
+## --syntax
+Show config file syntax
+
 ## --help, -h
 Show help message
 

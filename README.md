@@ -93,12 +93,17 @@ Usage:
   op -c, --config FILE CODE [ARGS]
     Use a specific config file
 
+  op --syntax
+    Show config file syntax
+
   op -h, --help
     Show this message
 
   op -v, --version
     Show version number
 ```
+
+Use `op --syntax` for a compact summary of the config file format.
 
 ## Config Selection
 

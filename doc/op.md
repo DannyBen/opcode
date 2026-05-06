@@ -16,10 +16,14 @@ SYNOPSIS
 DESCRIPTION
 ==================================================
 
-**opcode** lets you define a simple configuration file in any directory.
+**opcode** lets you define a simple executable command catalog in any directory.
 
-This file includes command shortcuts (*opcodes*) that can be executed by
-running **op CODE**.
+It works as a lightweight makefile for humans, AI agents, and any workflow that
+benefits from short, memorable repo-local commands.
+
+Agents can also run a named command catalog like **agent check** or
+**agent test**, backed by **agent.op.conf**, without mixing generated helper
+commands into the main **op.conf**.
 
 OPTIONS
 ==================================================
@@ -92,23 +96,11 @@ You can supply a commit message:
 $ op commit "my commit message"
 ```
 
-### Config Selection
+### Named Command Catalogs
 
-Use `-c, --config` or `OPCODE_CONFIG` to run commands from a specific config
-file:
-
-```shell
-$ op -c agent.op.conf check
-$ op --config agent.op.conf check
-$ OPCODE_CONFIG=agent.op.conf op check
-```
-
-The `-c, --config` flag must appear before the command code. Any `-c` that
-appears after the command code is passed through to the command as an argument.
-The flag has precedence over `OPCODE_CONFIG`.
-
-You can also create another local command namespace by symlinking `op` under a
-different name:
+Opcode can provide separate command namespaces by symlinking **op** under any
+other executable name. This is useful for AI agents, automation, or any workflow
+that should keep its commands separate from the main **op.conf**:
 
 ```shell
 $ cd /usr/local/bin  # or wherever op is installed
@@ -123,8 +115,15 @@ agent -> agent.op.conf, agent.conf
 ```
 
 The `.op.conf` file is preferred when both files exist. A renamed executable
-does not fall back to `opcode` or `op.conf`; this keeps separately named
-catalogs from accidentally running commands from the main `op` namespace.
+does not fall back to **opcode** or **op.conf**; this keeps separately named
+catalogs from accidentally running commands from the main **op** namespace.
+
+This lets agents maintain reusable commands like **agent check**, **agent test**,
+or **agent fix-ci** while keeping the human-owned **op.conf** focused.
+
+Use **op --syntax** or **agent --syntax** for a compact summary of the config
+file format. Config files can also be selected explicitly with **--config** or
+**OPCODE_CONFIG**.
 
 ### Multiline Commands
 

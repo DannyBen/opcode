@@ -10,11 +10,15 @@
 .PD
 \f[B]op\f[R] OPTIONS
 .SH DESCRIPTION
-\f[B]opcode\f[R] lets you define a simple configuration file in any
-directory.
+\f[B]opcode\f[R] lets you define a simple executable command catalog in
+any directory.
 .PP
-This file includes command shortcuts (\f[I]opcodes\f[R]) that can be
-executed by running \f[B]op CODE\f[R].
+It works as a lightweight makefile for humans, AI agents, and any
+workflow that benefits from short, memorable repo\-local commands.
+.PP
+Agents can also run a named command catalog like \f[B]agent check\f[R]
+or \f[B]agent test\f[R], backed by \f[B]agent.op.conf\f[R], without
+mixing generated helper commands into the main \f[B]op.conf\f[R].
 .SH OPTIONS
 .SS ?, \-\-info, \-i
 Show all codes and their usage comments (#?)
@@ -71,23 +75,11 @@ You can supply a commit message:
 .EX
 $ op commit \(dqmy commit message\(dq
 .EE
-.SS Config Selection
-Use \f[CR]\-c, \-\-config\f[R] or \f[CR]OPCODE_CONFIG\f[R] to run
-commands from a specific config file:
-.IP
-.EX
-$ op \-c agent.op.conf check
-$ op \-\-config agent.op.conf check
-$ OPCODE_CONFIG=agent.op.conf op check
-.EE
-.PP
-The \f[CR]\-c, \-\-config\f[R] flag must appear before the command code.
-Any \f[CR]\-c\f[R] that appears after the command code is passed through
-to the command as an argument.
-The flag has precedence over \f[CR]OPCODE_CONFIG\f[R].
-.PP
-You can also create another local command namespace by symlinking
-\f[CR]op\f[R] under a different name:
+.SS Named Command Catalogs
+Opcode can provide separate command namespaces by symlinking
+\f[B]op\f[R] under any other executable name.
+This is useful for AI agents, automation, or any workflow that should
+keep its commands separate from the main \f[B]op.conf\f[R]:
 .IP
 .EX
 $ cd /usr/local/bin  # or wherever op is installed
@@ -102,9 +94,18 @@ agent \-> agent.op.conf, agent.conf
 .EE
 .PP
 The \f[CR].op.conf\f[R] file is preferred when both files exist.
-A renamed executable does not fall back to \f[CR]opcode\f[R] or
-\f[CR]op.conf\f[R]; this keeps separately named catalogs from
-accidentally running commands from the main \f[CR]op\f[R] namespace.
+A renamed executable does not fall back to \f[B]opcode\f[R] or
+\f[B]op.conf\f[R]; this keeps separately named catalogs from
+accidentally running commands from the main \f[B]op\f[R] namespace.
+.PP
+This lets agents maintain reusable commands like \f[B]agent check\f[R],
+\f[B]agent test\f[R], or \f[B]agent fix\-ci\f[R] while keeping the
+human\-owned \f[B]op.conf\f[R] focused.
+.PP
+Use \f[B]op \-\-syntax\f[R] or \f[B]agent \-\-syntax\f[R] for a compact
+summary of the config file format.
+Config files can also be selected explicitly with \f[B]\-\-config\f[R]
+or \f[B]OPCODE_CONFIG\f[R].
 .SS Multiline Commands
 In order to specify multiple commands for a single code, provide the
 commands indented with one or more spaces immediately under the command

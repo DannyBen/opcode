@@ -7,5 +7,6 @@ Usage:
   op -w, --what [CODE]
   op -e, --edit
   op -a, --add CODE COMMAND...
+  op -c, --config FILE CODE [ARGS]
   op -h, --help
   op -v, --version

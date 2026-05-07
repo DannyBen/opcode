@@ -25,6 +25,7 @@ Usage:
 
   op -c, --config FILE CODE [ARGS]
     Use a specific config file
+    It can also be set with $OPCODE_CONFIG or by the executable name
 
   op --syntax
     Show config file syntax

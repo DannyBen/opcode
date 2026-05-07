@@ -1,6 +1,18 @@
 Changelog
 ========================================
 
+v1.2.0 - 2026-05-07
+----------------------------------------
+
+- Update setup to set 755 on the executable [`fc04bc4`](https://github.com/DannyBen/opcode/commit/fc04bc4)
+- Switch to ssi-based installer [`b5108e8`](https://github.com/DannyBen/opcode/commit/b5108e8)
+- Update setup/uninstall [`94b478e`](https://github.com/DannyBen/opcode/commit/94b478e)
+- Add executable namespace [`b6271e5`](https://github.com/DannyBen/opcode/commit/b6271e5)
+- Add --syntax help for humans and agents [`2de3434`](https://github.com/DannyBen/opcode/commit/2de3434)
+- Update syntax help [`e261ad6`](https://github.com/DannyBen/opcode/commit/e261ad6)
+- Compare [`v1.1.1..v1.2.0`](https://github.com/dannyben/opcode/compare/v1.1.1..v1.2.0)
+
+
 v1.1.1 - 2024-07-08
 ----------------------------------------
 

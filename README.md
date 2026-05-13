@@ -37,6 +37,13 @@ $ curl -Ls get.dannyb.co/opcode/setup | bash
 If you prefer to install manually, simply download the [op](/op) file,
 place it somewhere in your path, and make it executable.
 
+## Agent Skill
+
+This repository includes an Opcode agent skill in [`skill/`](skill/). To use
+it, ask your agent to install the skill from
+<https://github.com/DannyBen/opcode/tree/master/skill>, or copy it to your
+agent's skills directory.
+
 ## Usage
 
 When you execute `op`, Opcode will look for a file named `opcode` or `op.conf`

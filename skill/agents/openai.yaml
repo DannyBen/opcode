@@ -1,0 +1,4 @@
+interface:
+  display_name: "Opcode"
+  short_description: "Manage Opcode command catalogs"
+  default_prompt: "Help me add or run a repo-local Opcode command."

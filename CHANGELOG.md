@@ -1,6 +1,13 @@
 Changelog
 ========================================
 
+v1.2.1 - 2026-06-06
+----------------------------------------
+
+- Localize and rename internal vars [`2325f06`](https://github.com/DannyBen/opcode/commit/2325f06)
+- Compare [`v1.2.0..v1.2.1`](https://github.com/dannyben/opcode/compare/v1.2.0..v1.2.1)
+
+
 v1.2.0 - 2026-05-07
 ----------------------------------------
 

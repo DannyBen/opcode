@@ -15,7 +15,7 @@ opcode_context() {
     printf "Usage:\n"
     printf "  %s CODE [ARGS]\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
-      printf "    Execute a command from the config file (%s)\n" "$CONFIG_FILE"
+      printf "    Execute a command from the config file (%s)\n" "$opcode_file"
       printf "    Arguments will be passed to the command (use with \"\$@\")\n\n"
     fi
 
@@ -31,7 +31,7 @@ opcode_context() {
 
     printf "  %s -s, --show\n" "$PROGRAM_NAME"
     if [[ $long_usage == 1 ]]; then
-      printf "    Show the config file (%s)\n\n" "$CONFIG_FILE"
+      printf "    Show the config file (%s)\n\n" "$opcode_file"
     fi
 
     printf "  %s -w, --what [CODE]\n" "$PROGRAM_NAME"
@@ -77,8 +77,8 @@ opcode_context() {
   }
 
   need_config() {
-    if [[ ! -f $CONFIG_FILE ]]; then
-      abort "Cannot find config file ($CONFIG_FILE)"
+    if [[ ! -f $opcode_file ]]; then
+      abort "Cannot find config file ($opcode_file)"
     fi
   }
 
@@ -126,7 +126,7 @@ opcode_context() {
           break
         fi
       fi
-    done <"$CONFIG_FILE"
+    done <"$opcode_file"
 
     printf "%s\n" "${script[@]}"
   }
@@ -156,7 +156,7 @@ opcode_context() {
     shift
     new_command=$(shellwords "${@}")
 
-    echo "$new_code: $new_command" >>"$CONFIG_FILE"
+    echo "$new_code: $new_command" >>"$opcode_file"
     show_config
   }
 
@@ -193,7 +193,7 @@ opcode_context() {
       elif [[ $line =~ $break_regex ]]; then
         break
       fi
-    done <"$CONFIG_FILE"
+    done <"$opcode_file"
 
     printf "\n"
 
@@ -234,17 +234,17 @@ opcode_context() {
         printf "    %s\n" "${BASH_REMATCH[1]}"
 
       fi
-    done <"$CONFIG_FILE"
+    done <"$opcode_file"
     printf "\n"
   }
 
   edit_config() {
-    ${EDITOR:-vi} "$CONFIG_FILE"
+    ${EDITOR:-vi} "$opcode_file"
   }
 
   show_config() {
     need_config
-    cat "$CONFIG_FILE"
+    cat "$opcode_file"
   }
 
   show_syntax() {
@@ -318,25 +318,25 @@ EOF
   }
 
   set_config_file() {
-    if [[ -n ${CONFIG_FILE_OVERRIDE:-} ]]; then
-      CONFIG_FILE="$CONFIG_FILE_OVERRIDE"
+    if [[ -n ${opcode_file_override:-} ]]; then
+      opcode_file="$opcode_file_override"
     elif [[ -n ${OPCODE_CONFIG:-} ]]; then
-      CONFIG_FILE="$OPCODE_CONFIG"
+      opcode_file="$OPCODE_CONFIG"
     elif [[ $PROGRAM_NAME == "op" && -f "opcode" ]]; then
-      CONFIG_FILE="opcode"
+      opcode_file="opcode"
     elif [[ $PROGRAM_NAME == "op" ]]; then
-      CONFIG_FILE="op.conf"
+      opcode_file="op.conf"
     elif [[ -f "$PROGRAM_NAME.op.conf" ]]; then
-      CONFIG_FILE="$PROGRAM_NAME.op.conf"
+      opcode_file="$PROGRAM_NAME.op.conf"
     elif [[ -f "$PROGRAM_NAME.conf" ]]; then
-      CONFIG_FILE="$PROGRAM_NAME.conf"
+      opcode_file="$PROGRAM_NAME.conf"
     else
-      CONFIG_FILE="$PROGRAM_NAME.op.conf"
+      opcode_file="$PROGRAM_NAME.op.conf"
     fi
   }
 
   list_or_usage() {
-    if [[ -f $CONFIG_FILE ]]; then
+    if [[ -f $opcode_file ]]; then
       list_codes
     else
       usage
@@ -344,7 +344,7 @@ EOF
   }
 
   send_completion() {
-    [[ -z "$COMP_LINE" || ! -f $CONFIG_FILE ]] && return
+    [[ -z "$COMP_LINE" || ! -f $opcode_file ]] && return
     # shellcheck disable=SC2086
     set $COMP_LINE
     if [[ $# -eq 1 ]]; then
@@ -355,24 +355,28 @@ EOF
   }
 
   parse_config_option() {
-    CONFIG_FILE_OVERRIDE=""
+    opcode_file_override=""
 
     if [[ $1 == "-c" || $1 == "--config" ]]; then
       if [[ -z ${2:-} ]]; then
         abort "Missing config file for $1"
       fi
 
-      CONFIG_FILE_OVERRIDE="$2"
+      opcode_file_override="$2"
       shift 2
     fi
 
-    OPCODE_ARGS=("$@")
+    opcode_args=("$@")
   }
 
   opcode_run() {
+    local opcode_file
+    local opcode_file_override
+    local -a opcode_args
+
     parse_config_option "$@"
     set_config_file
-    set -- "${OPCODE_ARGS[@]}"
+    set -- "${opcode_args[@]}"
 
     case "$1" in
       "") list_or_usage ;;
@@ -400,7 +404,7 @@ EOF
   cyan() { printf "\e[36m%b\e[0m\n" "$*"; }
 
   opcode_initialize() {
-    VERSION="1.2.0"
+    VERSION="1.2.1"
     PROGRAM_NAME=$(basename "$0")
     set -e
   }

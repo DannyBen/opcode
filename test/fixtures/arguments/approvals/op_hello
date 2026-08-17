@@ -1,0 +1,4 @@
+Missing required argument: NAME
+
+  op hello NAME [TITLE]
+    say hello

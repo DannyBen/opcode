@@ -163,6 +163,25 @@ and it will be translated to this command
 git commit -am "version 1.1.1" && git push
 ```
 
+Arguments can be declared on a `#$` line beneath the command. Bare argument
+names are required, while names in brackets are optional:
+
+```shell
+hello: echo "hello ${2:-Mr.} $1"
+#? say hello
+#$ NAME [TITLE]
+```
+
+Declared arguments are shown by `op ?`. Running the command without a required
+argument prints the missing argument followed by the same command help:
+
+```text
+Missing required argument: NAME
+
+  op hello NAME [TITLE]
+    say hello
+```
+
 
 ### Usage Comments
 

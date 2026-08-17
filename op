@@ -82,16 +82,75 @@ opcode_context() {
     fi
   }
 
-  find_command() {
-    need_config
-    code="$1"
+  find_arguments() {
+    local code="$1"
+    local code_pattern="^${code}:[[:space:]]*"
+    local argument_pattern='^#\$[[:space:]]*(.*)$'
+    local found=0
 
-    result=$(get_script "$code" "exact")
-    if [[ -z $result ]]; then
-      result=$(get_script "$code" "fuzzy")
-    fi
+    while IFS= read -r line || [[ -n $line ]]; do
+      if [[ $line =~ $code_pattern ]]; then
+        if [[ $found == 1 ]]; then
+          break
+        fi
+        found=1
+      elif [[ $found == 1 && $line =~ $argument_pattern ]]; then
+        echo "${BASH_REMATCH[1]}"
+        return
+      elif [[ $found == 1 && ! $line =~ ^[[:space:]] && ! $line =~ ^# ]]; then
+        break
+      fi
+    done <"$opcode_file"
+  }
 
-    echo "$result"
+  find_comments() {
+    local code="$1"
+    local comment_pattern='^#\? ?(.*)$'
+    local found=0
+
+    while IFS= read -r line || [[ -n $line ]]; do
+      if [[ $line =~ ^${code}:[[:space:]]* ]]; then
+        found=1
+      elif [[ $found == 1 && $line =~ $comment_pattern ]]; then
+        echo "${BASH_REMATCH[1]}"
+      elif [[ $found == 1 && ! $line =~ ^[[:space:]] && ! $line =~ ^# ]]; then
+        break
+      fi
+    done <"$opcode_file"
+  }
+
+  resolve_code() {
+    local code="$1"
+    local exact_pattern="^(${code}):"
+    local fuzzy_pattern="^(${code}[^:]*):"
+    local fuzzy=""
+
+    while IFS= read -r line || [[ -n $line ]]; do
+      if [[ $line =~ $exact_pattern ]]; then
+        echo "${BASH_REMATCH[1]}"
+        return
+      elif [[ -z $fuzzy && $line =~ $fuzzy_pattern ]]; then
+        fuzzy="${BASH_REMATCH[1]}"
+      fi
+    done <"$opcode_file"
+
+    echo "$fuzzy"
+  }
+
+  print_command_help() {
+    local prefix="$1"
+    local indent="$2"
+    local code="$3"
+    local arguments="$4"
+    shift 4
+
+    printf "%s%s%s" "$indent" "$prefix" "$code"
+    [[ -n $arguments ]] && printf " %s" "$arguments"
+    printf "\n"
+
+    for comment in "$@"; do
+      printf "%s  %s\n" "$indent" "$comment"
+    done
   }
 
   get_script() {
@@ -132,14 +191,30 @@ opcode_context() {
   }
 
   run_command() {
-    local command
+    local command arguments argument canonical_code
+    local -a comments=()
+    local position=0
     local code="$1"
     shift # so that $@ is properly available to the user script
 
-    command=$(find_command "$code")
-    if [[ -z $command ]]; then
+    need_config
+    canonical_code=$(resolve_code "$code")
+    if [[ -z $canonical_code ]]; then
       abort "Code not found: $code"
     fi
+
+    command=$(get_script "$canonical_code" "exact")
+    arguments=$(find_arguments "$canonical_code")
+    mapfile -t comments < <(find_comments "$canonical_code")
+    for argument in $arguments; do
+      ((position = position + 1))
+      [[ $argument == \[*\] ]] && continue
+      if (($# < position)); then
+        printf "Missing required argument: %s\n\n" "$argument" >&2
+        print_command_help "$PROGRAM_NAME " "  " "$canonical_code" "$arguments" "${comments[@]}" >&2
+        exit 1
+      fi
+    done
 
     eval "$command"
   }
@@ -205,12 +280,12 @@ opcode_context() {
   list_codes_extended() {
     need_config
     code_regex="^([a-zA-Z0-9_.-]+):"
-    comment_regex="^#\? ?(.*)"
     break_regex="^[[:space:]]*private[[:space:]]*$"
     header_regex="^## ?(.*)"
     comment_found=0
+    item_found=0
 
-    echo "Usage: $PROGRAM_NAME CODE [ARGS]"
+    printf "Usage: %s CODE [ARGS]\n\n" "$PROGRAM_NAME"
 
     # shellcheck disable=SC2162
     while IFS= read line || [[ -n "$line" ]]; do
@@ -219,19 +294,22 @@ opcode_context() {
       fi
 
       if [[ $line =~ $header_regex ]]; then
-        printf "\n%s\n\n" "$(green "${BASH_REMATCH[1]}")"
+        ((item_found == 1)) && printf "\n"
+        printf "%s\n\n" "$(green "${BASH_REMATCH[1]}")"
         comment_found=0
+        item_found=1
 
       elif [[ $line =~ $code_regex ]]; then
         if [[ $comment_found == 1 ]]; then
           printf "\n"
           comment_found=0
         fi
-        printf "  %s\n" "$(bold "${BASH_REMATCH[1]}")"
-
-      elif [[ $line =~ $comment_regex ]]; then
-        comment_found=1
-        printf "    %s\n" "${BASH_REMATCH[1]}"
+        code="${BASH_REMATCH[1]}"
+        arguments=$(find_arguments "$code")
+        mapfile -t comments < <(find_comments "$code")
+        ((${#comments[@]} > 0)) && comment_found=1
+        print_command_help "" "  " "$(bold "$code")" "$arguments" "${comments[@]}"
+        item_found=1
 
       fi
     done <"$opcode_file"
@@ -265,6 +343,13 @@ Arguments passed after the code are available to the script as "\$@", "\$1", "\$
 
   greet: echo "hello \$1"
   commit: git commit -am "\$@"
+
+Declare required and optional arguments with #\$. Bare names are required;
+names in brackets are optional. They appear in \`$PROGRAM_NAME ?\`:
+
+  greet: echo "hello \${2:-Mr.} \$1"
+  #? Say hello
+  #\$ NAME [TITLE]
 
 Multiline commands are indented below the code:
 

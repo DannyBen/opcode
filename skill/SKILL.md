@@ -30,7 +30,15 @@ project's normal Opcode catalog.
      first command
      second command
    #? usage text shown by op ?
+
+   greet: echo "hello ${2:-Mr.} $1"
+   #? Say hello
+   #$ NAME [TITLE]
    ```
+
+   Arguments declared on a `#$` line are included in `op ?`. Bare names are
+   required, while names in brackets are optional. The command continues to
+   access them positionally through `$1`, `$2`, and `$@`.
 
 4. Run commands through Opcode when that is what the user asked for:
 

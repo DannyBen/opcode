@@ -193,6 +193,34 @@ and it will be translated to this command
 git commit -am "version 1.1.1" && git push
 ```
 
+You can declare positional arguments on a `#$` line underneath the command.
+Bare names are required, while names in brackets are optional:
+
+```shell
+hello: echo "hello ${2:-Mr.} $1"
+#? say hello
+#$ NAME [TITLE]
+```
+
+Declared arguments are included in `op ?`:
+
+```text
+Usage: op CODE [ARGS]
+
+  hello NAME [TITLE]
+    say hello
+```
+
+When a required argument is missing, Opcode shows the missing argument and the
+same command help:
+
+```text
+Missing required argument: NAME
+
+  op hello NAME [TITLE]
+    say hello
+```
+
 ## Usage Comments
 
 You may add special usage comments in your `op.conf` file. These will be
@@ -205,7 +233,7 @@ For example, this configuration file:
 # op.conf
 deploy: git commit -am "$1" && git push
 #? perform git commit and push.
-#? usage: op deploy COMMIT_MESSAGE
+#$ COMMIT_MESSAGE
 
 pull: git pull
 #? perform git pull
@@ -215,10 +243,10 @@ will result in this output:
 
 ```
 $ op ?
-Usage: op COMMAND [ARGS]
-  deploy
+Usage: op CODE [ARGS]
+
+  deploy COMMIT_MESSAGE
     perform git commit and push.
-    usage: op deploy COMMIT_MESSAGE
 
   pull
     perform git pull

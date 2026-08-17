@@ -2,15 +2,15 @@ Usage: op CODE [ARGS]
 
 [32mHeader 1[0m
 
-  [1mdeploy[0m
-    Deploy to production
-    Usage: deploy APPNAME
+[1mdeploy[0m
+  Deploy to production
+  Usage: deploy APPNAME
 
 [32mHeader 2[0m
 
-  [1mterminate[0m
-    Terminate everything
+[1mterminate[0m
+  Terminate everything
 
-  [1mhelpless[0m
-  [1mhelpful[0m
-    Usage text
+[1mhelpless[0m
+[1mhelpful[0m
+  Usage text

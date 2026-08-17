@@ -31,6 +31,17 @@ describe "op <command>"
     approve "op greet Lloyd"
     cd ../../
 
+  context "with declared arguments"
+    cd ./fixtures/arguments
+    approve "op hello"
+    expect_exit_code 1
+    approve "op hello Danny"
+    approve "op hello Danny Dr."
+    approve "op wave"
+    approve "op send Danny"
+    expect_exit_code 1
+    cd ../../
+
   context "with positional quoted arguments"
     cd ./fixtures/advanced
     approve "op reverse 'Lloyd Christmas' 'Harry Dunne'"

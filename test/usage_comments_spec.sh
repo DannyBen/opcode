@@ -7,6 +7,11 @@ describe "op ?"
     approve "op ?"
     cd ../../
 
+  context "when arguments are declared"
+    cd ./fixtures/arguments
+    approve "op ?"
+    cd ../../
+
   context "with rogue lines"
     cd ./fixtures/rogue-line
     approve "op ?"

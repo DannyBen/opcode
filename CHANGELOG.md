@@ -1,6 +1,13 @@
 Changelog
 ========================================
 
+v1.3.0 - 2026-08-17
+----------------------------------------
+
+- Add support for defining required args [`4a26a07`](https://github.com/DannyBen/opcode/commit/4a26a07)
+- Compare [`v1.2.1..v1.3.0`](https://github.com/dannyben/opcode/compare/v1.2.1..v1.3.0)
+
+
 v1.2.1 - 2026-06-06
 ----------------------------------------
 

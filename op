@@ -139,16 +139,17 @@ opcode_context() {
 
   print_command_help() {
     local prefix="$1"
-    local code="$2"
-    local arguments="$3"
-    shift 3
+    local indent="$2"
+    local code="$3"
+    local arguments="$4"
+    shift 4
 
-    printf "%s%s" "$prefix" "$code"
+    printf "%s%s%s" "$indent" "$prefix" "$code"
     [[ -n $arguments ]] && printf " %s" "$arguments"
     printf "\n"
 
     for comment in "$@"; do
-      printf "  %s\n" "$comment"
+      printf "%s  %s\n" "$indent" "$comment"
     done
   }
 
@@ -210,7 +211,7 @@ opcode_context() {
       [[ $argument == \[*\] ]] && continue
       if (($# < position)); then
         printf "Missing required argument: %s\n\n" "$argument" >&2
-        print_command_help "$PROGRAM_NAME " "$canonical_code" "$arguments" "${comments[@]}" >&2
+        print_command_help "$PROGRAM_NAME " "  " "$canonical_code" "$arguments" "${comments[@]}" >&2
         exit 1
       fi
     done
@@ -282,8 +283,9 @@ opcode_context() {
     break_regex="^[[:space:]]*private[[:space:]]*$"
     header_regex="^## ?(.*)"
     comment_found=0
+    item_found=0
 
-    echo "Usage: $PROGRAM_NAME CODE [ARGS]"
+    printf "Usage: %s CODE [ARGS]\n\n" "$PROGRAM_NAME"
 
     # shellcheck disable=SC2162
     while IFS= read line || [[ -n "$line" ]]; do
@@ -292,8 +294,10 @@ opcode_context() {
       fi
 
       if [[ $line =~ $header_regex ]]; then
-        printf "\n%s\n\n" "$(green "${BASH_REMATCH[1]}")"
+        ((item_found == 1)) && printf "\n"
+        printf "%s\n\n" "$(green "${BASH_REMATCH[1]}")"
         comment_found=0
+        item_found=1
 
       elif [[ $line =~ $code_regex ]]; then
         if [[ $comment_found == 1 ]]; then
@@ -304,7 +308,8 @@ opcode_context() {
         arguments=$(find_arguments "$code")
         mapfile -t comments < <(find_comments "$code")
         ((${#comments[@]} > 0)) && comment_found=1
-        print_command_help "" "$(bold "$code")" "$arguments" "${comments[@]}"
+        print_command_help "" "  " "$(bold "$code")" "$arguments" "${comments[@]}"
+        item_found=1
 
       fi
     done <"$opcode_file"

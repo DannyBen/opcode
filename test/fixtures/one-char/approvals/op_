@@ -1,6 +1,7 @@
 Usage: op CODE [ARGS]
-[1m1[0m
-  number works
 
-[1ma[0m
-  single letter works
+  [1m1[0m
+    number works
+
+  [1ma[0m
+    single letter works

@@ -1,12 +1,13 @@
 Usage: op CODE [ARGS]
-[1mone[0m
-[1mmulti[0m
-  these lines will be joined with a newline
 
-[1mconcat[0m
-  these lines will be joined without any glue
+  [1mone[0m
+  [1mmulti[0m
+    these lines will be joined with a newline
 
-[1madvanced-multi[0m
-  this will abort unless it gets an argument
+  [1mconcat[0m
+    these lines will be joined without any glue
 
-[1mtwo[0m
+  [1madvanced-multi[0m
+    this will abort unless it gets an argument
+
+  [1mtwo[0m

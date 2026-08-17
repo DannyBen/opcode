@@ -178,8 +178,8 @@ argument prints the missing argument followed by the same command help:
 ```text
 Missing required argument: NAME
 
-op hello NAME [TITLE]
-  say hello
+  op hello NAME [TITLE]
+    say hello
 ```
 
 

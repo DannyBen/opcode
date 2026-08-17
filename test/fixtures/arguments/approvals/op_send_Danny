@@ -1,4 +1,4 @@
 Missing required argument: MESSAGE
 
-op send NAME MESSAGE
-  send a message
+  op send NAME MESSAGE
+    send a message

@@ -1,9 +1,10 @@
 Usage: op CODE [ARGS]
-[1mhello[0m NAME [TITLE]
-  say hello
 
-[1mwave[0m [NAME]
-  wave hello
+  [1mhello[0m NAME [TITLE]
+    say hello
 
-[1msend[0m NAME MESSAGE
-  send a message
+  [1mwave[0m [NAME]
+    wave hello
+
+  [1msend[0m NAME MESSAGE
+    send a message

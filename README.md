@@ -37,6 +37,12 @@ $ curl -Ls get.dannyb.co/opcode/setup | bash
 If you prefer to install manually, simply download the [op](/op) file,
 place it somewhere in your path, and make it executable.
 
+### Installing with Homebrew
+
+```shell
+$ brew install dannyben/tap/opcode
+```
+
 ## Agent Skill
 
 This repository includes an Opcode agent skill in [`skill/`](skill/). To use
